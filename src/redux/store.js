@@ -34,7 +34,66 @@ import rootReducer from './root-reducer';
 
 // now let's set up our middleware and the middleware the store is expecting from redux is
 // going to be an array and we do that by typing the following:
+
+
+// -- Mark 2 --
+// lecture 150: Optimizing Production Build
+// the first thing we need to do to make sure logger only applies when were in development is
+// to change " const middlewares = [ logger ]; " to " const middlewares = []; " and then set up
+// an IF statement as follows:
+/*
+if ( process.env.NODE_ENV === 'development' ) {
+    middlewares.push( logger );
+}
+*/
+
 const middlewares = [ logger ];
+
+// inside of node there is an environment variable and we can set environment variables
+// or heroku can set environment variables but create react app actually sets an environment
+// variable and this environment variable can only be accessed through " process.env " and
+// " NODE_ENV " is a property on " process.env " and " process.env.NODE_ENV " will either
+// be === " 'development'  ", " 'production'  " or " 'test'  " or
+// " process.env.NODE_ENV === 'development' " or
+// " process.env.NODE_ENV === 'production' " or
+// " process.env.NODE_ENV === 'test' "
+// and this allows us to know whether our app is being served in a development, production
+// or test environment so what we are saying is that if the node environment variable is in
+// development mode then we want to push " logger " into the middlewares array
+
+// from: https://dzone.com/articles/what-you-should-know-about-node-env
+// " NODE_ENV is an environment variable popularized by the Express framework. It specifies
+// the environment in which an application is running such as development, staging, production,
+// testing, etc.
+
+// By default, our application will run in development environment. And we can change the
+// environment by changing process.env.NODE_ENV. "
+
+// and if we go to our app on localhost:3000 we see that our logger is still running but
+// if we commit our code
+
+// Rogers-iMac:crown_clothing Home$ git status
+// Rogers-iMac:crown_clothing Home$ git add .
+// Rogers-iMac:crown_clothing Home$ git commit -m " removing redux logger from our production
+// build "
+// Rogers-iMac:crown_clothing Home$ git push origin master
+
+// now if I go to my " crown-clothing " project in GutHub, I see the changes were uploaded
+// sucessfully 
+
+// 
+
+
+
+if ( process.env.NODE_ENV === 'development' ) {
+
+    middlewares.push( logger );
+
+}
+
+
+// End of -- Mark 2 --
+
 
 // now let's create our store and our store will be equal to the createStore function and the
 // createStore() function will take 2 arguments: rootReducer and the return value of
