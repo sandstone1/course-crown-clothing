@@ -47,7 +47,7 @@ if ( process.env.NODE_ENV === 'development' ) {
 }
 */
 
-const middlewares = [ logger ];
+const middlewares = [];
 
 // inside of node there is an environment variable and we can set environment variables
 // or heroku can set environment variables but create react app actually sets an environment
@@ -77,8 +77,16 @@ const middlewares = [ logger ];
 // Rogers-iMac:crown_clothing Home$ git commit -m " removing redux logger from our production
 // build "
 // Rogers-iMac:crown_clothing Home$ git push origin master
+// Rogers-iMac:crown_clothing Home$ git push heroku master
 
-// now if I go to my " crown-clothing " project in GutHub, I see the changes were uploaded
+// in this case we added: " Rogers-iMac:crown_clothing Home$ git push heroku master " since
+// we want to push these changes up to our app on heroku 
+
+// now if I go to my " course-crown-clothing " project in GutHub, I see the changes were
+// uploaded sucessfully
+
+// and if I go to my app that is being hosted on heroku and located at
+// " https://course-crown-clothing.herokuapp.com/ " I see the changes were uploaded
 // sucessfully 
 
 // 
