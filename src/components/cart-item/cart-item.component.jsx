@@ -1,6 +1,14 @@
 
 import React from 'react';
-import './cart-item.styles.scss';
+// import './cart-item.styles.scss';
+
+import {
+    CartItemContainer,
+    CartItemImage,
+    CartItemDetails,
+    CartItemDetailsName
+} from './cart-item.styles';
+
 
 // below we are destructuring " item " and then destructuring " imageUrl ", " price ", " name "
 // and " quantity " off of " item "
@@ -12,21 +20,19 @@ const CartItem = ( { item : { imageUrl, price, name, quantity } } ) => (
     " Blue Jean Jacket "
     " 1 x $90 "
     */
-    <div className="cart-item">
+    <CartItemContainer>
 
-        <img src={ imageUrl } alt="item" className="cart-item--img" />
+        <CartItemImage src={ imageUrl } alt="item" />
 
-        <div className="cart-item--details">
+        <CartItemDetails>
 
-            <span className="cart-item--details--name">{ name }</span>
+            <CartItemDetailsName>{ name }</CartItemDetailsName>
 
-            <span className="cart-item--details--price">
-                { quantity } x ${ price }
-            </span>
+            <span>{ quantity } x ${ price }</span>
 
-        </div>
+        </CartItemDetails>
 
-    </div>
+    </CartItemContainer>
 
 );
 

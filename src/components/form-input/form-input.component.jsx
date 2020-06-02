@@ -1,6 +1,13 @@
 
 import React from 'react';
-import './form-input.styles.scss';
+// import './form-input.styles.scss';
+
+
+import { 
+    FormInputContainer,
+    FormInputField,
+    FormInputLabel
+} from './form-input.styles';
 
 
 // this will be functional component since we don't need any state
@@ -23,27 +30,33 @@ const FormInput = ( { handleChange, label, ...otherProps } ) => (
 
     // remember, when the label renders in HTML, the class name form-input-label will be
     // automatically enclosed in double quotes
-    <div className="group">
-        <input
-            className="form-input"
+    <FormInputContainer>
+
+        <FormInputField
             onChange={ handleChange }
             { ...otherProps }
         />
+
         {
-            label ?
-            (
-                <label
+            label ? (
+
+                <FormInputLabel
                     className=
                     { 
-                        `${ otherProps.value.length > 0 ? 'shrink' : '' } form-input-label` 
+                        `${ otherProps.value.length > 0 ? 'shrink' : '' } form-input-label`                
                     }
-                >
-                { label }
-                </label>
+                 >
+                    { label }
+                </FormInputLabel>
+
+            ) : (
+
+                null
+
             )
-            : null
         }
-    </div>
+
+    </FormInputContainer>
 
 );
 

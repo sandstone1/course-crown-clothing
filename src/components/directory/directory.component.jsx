@@ -1,7 +1,7 @@
 
 import React from 'react';
 import MenuItem from '../menu-item/menu-item.component';
-import './directory.styles.scss';
+// import './directory.styles.scss';
 
 
 // -- Mark 2 -- continued
@@ -10,6 +10,9 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectDirectorySections } from '../../redux/directory/directory.selectors';
 // End of -- Mark 2 --
+
+
+import { DirectoryMenuContainer } from './directory.styles';
 
 
 // will create a class based component since we need to store state
@@ -142,7 +145,7 @@ const Directory = ( { sections } ) => (
 
         // return (
 
-            <div className="directory-menu">
+            <DirectoryMenuContainer>
             {
                 // instead of:
                 /*
@@ -187,7 +190,7 @@ const Directory = ( { sections } ) => (
                 ) )
                 // End of -- Mark 1 and Mark 2 --
             }
-            </div>
+            </DirectoryMenuContainer>
 
         // );
 

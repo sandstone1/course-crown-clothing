@@ -42,10 +42,28 @@ const COLLECTION_ID_MAP = {
 // pages/collection/collection.component.jsx file
 
 // the below gives us the correct collection object
+
+
+// -- Mark 4 --
+// lecture 168: WithSpinner HOC
+// remember, we are coming from -- Mark 4 -- below and the notes below relate to the second error
+// and since we changed the initial state for collections to null ( remember before collections
+// : SHOP_DATA ) or collections equaled SHOP_DATA in our shop reducer but now collections equals
+// null in our shop reducer so we need to account for this change by setting up a ternary operator
+// below  or change " ( collections ) => collections[ collectionUrlParam ] " to
+// " ( collections ) => ( collections ? collections[ collectionUrlParam ] : null ) " and we are
+// saying if " collections " exist then return " collections[ collectionUrlParam ] " to our
+// selectCollection selector and if collections does not exist or is null then we will return
+// null and it is better that we return null so that the components that rely on the
+// selectCollection selector will know that there is no data in the collections map object so
+// therefore the respective components will just render an empty state and now let's go fix the
+// CollectionPage component so go to pages/collection/collection.component.jsx
 export const selectCollection = ( collectionUrlParam ) => createSelector(
     [ selectShopCollections ],
-    ( collections ) => collections[ collectionUrlParam ]
+    ( collections ) => ( collections ? collections[ collectionUrlParam ] : null )
 );
+// End of -- Mark 4 --
+
 // End of -- Mark 1 --
 
 
@@ -136,9 +154,27 @@ console.log(keys) // ['alpha', 'beta']
 // component to work properly
 
 // so let's go to our CollectionsOverview component and make this update
+
+
+// -- Mark 4 --
+// lecture 168: WithSpinner HOC
+// since we set " collections " equal to " null " in our shop reducer we are getting an
+// error related to the selectCollectionForPreview selector below because we are
+// calling Object.keys( collections ) and collections is null so what we want to do is change
+// " Object.keys( collections ).map( ( key ) => collections[ key ] ) " to this
+// " collections ? Object.keys( collections ).map( ( key ) => collections[ key ] ) : [] "
+// so we are saying if " collections " exist then return
+// " Object.keys( collections ).map( ( key ) => collections[ key ] ) " otherwise return an
+// an empty array and now if we go to " http://localhost:3000/shop " we see that the error is
+// fixed
+
+// however, if we go to " http://localhost:3000/shop/hats " and refresh the page we will see
+// another error and to start the process of fixing this error go to -- Mark 4 -- above
 export const selectCollectionForPreview = createSelector(
     [ selectShopCollections ],
-    ( collections ) => Object.keys( collections ).map( ( key ) => collections[ key ] )
+    ( collections ) => collections ? Object.keys( collections ).map( ( key ) => collections[ key ] ) : []
     
 );
+// End of -- Mark 4 --
+
 // End of -- Mark 3 --

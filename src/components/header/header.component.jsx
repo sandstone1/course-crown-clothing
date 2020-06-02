@@ -1,7 +1,6 @@
 
 import React from 'react';
-// will need to provide links so import in links from react router dom
-import { Link } from 'react-router-dom';
+
 // import in our logo and next lecture will explain " ReactComponent as Logo "
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 // import in our stylesheet
@@ -47,6 +46,34 @@ import { selectCartShow } from '../../redux/cart/cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 */
 // End of -- Mark 6 --
+
+
+
+// -- Mark 7 --
+// lecture 153: styled-components In Our App
+// if we look at the Header component we will see there is a container div with a className of
+// " header " that we need to make that div a HeaderContainer styled component and we'll need
+// an OptionsContainer and a LogoContainer styled component and let's go to " header.styles.jsx "
+// and now were back from " header.styles.jsx " and we import in the respective styled components:
+// " HeaderContainer ", " LogoContainer ", " OptionsContainer ", " OptionLink " and " OptionDiv"
+// and then replace the html below with the respective styled components 
+import {
+    HeaderContainer,
+    LogoContainer,
+    OptionsContainer,
+    OptionLink,
+    OptionDiv 
+} from './header.styles';
+
+// and now if we go to our app we see that our header is exactly the same so everything is working
+// and Yihua said this is really powerful and gives us a great amount of leverage as JavaScript
+// developers and we will continue to convert the styles from scss to styled-components and we
+// will see where styled-components is so useful in some of the more challanging components we've
+// built
+
+// remember, to remove " import { Link } from 'react-router-dom'; " above since we no longer need
+// it and remember we imported in Link in the header.styles.jsx file
+// End of -- Mark 7 --
 
 
 
@@ -128,34 +155,40 @@ const Header = ( { currentUser, show } ) => (
     // now if I go to my " crown-clothing " project in GutHub, I see the changes were uploaded
     // sucessfully
 
-    <div className="header">
+    <HeaderContainer>
 
-        <Link className="logo-container" to="/">
+        <LogoContainer to="/">
             <Logo className="logo" />
-        </Link>
+        </LogoContainer>
 
-        <div className="options">
+        <OptionsContainer>
 
-            <Link className="option" to="/shop">
+            <OptionLink to="/shop">
                 SHOP
-            </Link>
+            </OptionLink>
 
-            <Link className="option" to="/contact">
+            <OptionLink to="/contact">
                 CONTACT
-            </Link>
+            </OptionLink>
 
             {
-                currentUser ?
-                <div className="option" onClick={ () => auth.signOut() }>SIGN OUT</div>
-                :
-                <Link className="option" to="/signin">
-                    SIGN IN
-                </Link>
+                currentUser ? (
+
+                    <OptionDiv onClick={ () => auth.signOut() }>SIGN OUT</OptionDiv>
+
+                )
+                : (
+
+                    <OptionLink to="/signin">
+                        SIGN IN
+                    </OptionLink>
+
+                )
             }
 
             <CartIcon />
 
-        </div>
+        </OptionsContainer>
 
         {
             show ? (
@@ -165,7 +198,7 @@ const Header = ( { currentUser, show } ) => (
             )
         }
 
-    </div>
+    </HeaderContainer>
 
 );
 // End of -- Mark 3 and Mark 4 and Mark 5 --

@@ -66,6 +66,25 @@ import { setCurrentUser } from './redux/user/user.actions';
 
 
 
+// -- Mark 15 --
+// lecture 162: Moving Our Shop Data to Firebase
+// we are going to add our SHOP_DATA to our backend one time and we will do it
+// programmatically so we don't have to write it by hand and after we add the relevant
+// code inside our App component we will remove it since we only want to add our SHOP_DATA
+// to our backend one time
+
+// we also had to import in the selectCurrentUser selector and the 
+// createStructuredSelector from reselect so that our mapStateToProps works with our
+// selectCollectionForPreview selector and now let's go into the App component and call the
+// addCollectionAndDocuments function
+import { selectCurrentUser } from './redux/user/user.selectors';
+import { createStructuredSelector } from 'reselect';
+// import { selectCollectionForPreview } from './redux/shop/shop.selectors';
+// import { addCollectionAndDocuments } from './firebase/firebase.utils';
+// End of -- Mark 15 --
+
+
+
 // -- Mark 4 -- continued
 // comment out HatsPage
 /*
@@ -878,6 +897,111 @@ redux-logger.js:401   next state {user: {…}}
             // after lecture 91, I changed " console.log( user ); " to " console.log( userAuth ); "
             // so that I could see the userAuth object in the console
             console.log( userAuth );
+
+
+            // -- Mark 15 -- continued
+            // lecture 162: Moving Our Shop Data to Firebase
+            // add our addCollectionAndDocument function below and the collectionKey is
+            // " collections " and the objectsToAdd is the " collectionsArray " which is equal
+            // to our SHOP_DATA object but remember we converted the SHOP_DATA object ( which
+            // equals our state.shop.collections object ) into an array in the shop.selectors.js
+            // file so the " this.props.collectionsArray " below is really the same as the
+            // SHOP_DATA object but in an array form
+            // End of -- Mark 15 --
+            
+            
+            // -- Mark 16 --
+            // lecture 163: Moving Our Shop Data to Firebase 2
+            // instead of passing in the full array or " collectionsArray " ( remember there
+            // are certain key value pairs in the full array that we do not want ) we will map
+            // over the array and get the items we want which are " title " and " items " and
+            // to get " title " and " items " we will destructure off of collection or " hats ",
+            // for example, to get " title " and " items " and then we will return a new object
+            // and this new object will contain the title property with its corresponding value
+            // and items property with its corresponding value which is an array of objects
+            // ( please refer to SHOP_DATA for details )
+
+            // since we only wrote the code below so that we could programmatically add SHOP_DATA
+            // to our database we now need to take it out or comment it out since we've successfully
+            // added the data to our firestore database so we've accomplished our purpose
+
+            // we also need to comment out
+            // " import { addCollectionAndDocuments } from './firebase/firebase.utils'; " and
+            // " import { selectCollectionForPreview } from './redux/shop/shop.selectors'; " above
+            // and " collectionsArray : selectCollectionForPreview " from mapStateToProps below
+            // but the good news is we have a function ( i.e. addCollectionAndDocuments ) that we
+            // can use create new collections and documents whenever we want
+
+            /*
+            addCollectionAndDocuments( 'collections', this.props.collectionsArray.map( 
+                ( { title, items } ) => (
+                    {
+                        title : title,
+                        items : items
+                    }
+                ) )
+            );
+            */
+
+            // now if we go to our firestore database, we will see that the SHOP_DATA has been
+            // added according the parameters set forth above and it looks like the following:
+
+            // crown-clothing-25f2b         collections                     JQUr46Foq20b6vUvGYp0
+
+            // + Start collection           + Add document                  + Start collection
+
+            //  collections >               JQUr46Foq20b6vUvGYp0            + Add field
+            //  users                       PMw0lnFb7tWxUOe3bHEv
+            //                              kRrrxVcKtSuXHtjWQz4Q
+            //                              mCGGrwiX1TDVmaEXeNKG
+            //                              uLXuVidFGd6C866dEhNy
+            
+            //                                                              items
+            //                                                                  0
+            //                                                                      id: 23
+            //                                                                      imageUrl: "https://i.ibb.co/7CQVJNm/blue-tank.png"
+            //                                                                      name: Blue Tanktop"
+            //                                                                      price: 25
+            //                                                                  etc., etc., etc.
+
+            //                                                              title: "Womens"
+
+
+            // so now we need to pull our data from " collections " in our firestore database
+            // into our application and then store this data inside a reducer
+            
+            // End of -- Mark 16 --
+
+
+            // -- Mark 15 -- continued
+            // lecture 162: Moving Our Shop Data to Firebase
+
+            // now remember we console.logged out our collectionRef in our firebase.utils.js
+            // file so if we go into our console we will now see our collectionRef:
+            /*
+            CollectionReference {_query: Query, firestore: Firestore, _converter: undefined,
+            _path: ResourcePath}
+                firestore: Firestore {_firebaseApp: FirebaseAppImpl, _queue: AsyncQueue, INTERNAL:
+                {…}, _databaseId: DatabaseId, _persistenceKey: "[DEFAULT]", …}
+                id: "collections"
+                parent: null
+                path: "collections"
+                _converter: undefined
+                _path: ResourcePath {segments: Array(1), offset: 0, len: 1}
+                _query: Query {path: ResourcePath, collectionGroup: null, explicitOrderBy:
+                Array(0), filters: Array(0), limit: null, …}
+                __proto__: Query
+            */
+
+            // so we see our collectionRef in the console and we see that the id points to
+            // " collections " but since we haven't instantiated any documents yet we will not
+            // see the " collections " collection in our firestore database
+
+            // and now that we have our collectionRef we need to add the " objectsToAdd "
+            // into our " collections " collection in the firestore database and we'll do that
+            // in the next video
+            // End of -- Mark 15 --
+
         }
         );
 
@@ -1033,12 +1157,26 @@ redux-logger.js:401   next state {user: {…}}
 // " connect( mapStateToProps, mapDispatchToProps ) " below
 
 // now we have access to this.props.currentUser and now go the routes above
+
+// -- Mark 15 -- continued
+// lecture 162: Moving Our Shop Data to Firebase
+// we'll need the collectionsArray and we can get that by using the selectCollectionForPreview
+// selector and we'll need to change mapStateToProps from
+/*
 const mapStateToProps = ( { user } ) => (
     {
         currentUser : user.currentUser
     }
 );
+*/
 
+// to this:
+const mapStateToProps = createStructuredSelector(
+    {
+        currentUser : selectCurrentUser
+    }
+);
+// End of -- Mark 15 --
 
 
 // -- Mark 12 -- continued

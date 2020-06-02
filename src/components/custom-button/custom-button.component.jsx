@@ -1,6 +1,6 @@
 
 import React from 'react';
-import './custom-button.styles.scss';
+// import './custom-button.styles.scss';
 
 // what is props.children?
 // answer: "Here’s an example of a stateless function that is used to create a component.
@@ -71,24 +71,76 @@ render () {
 // will add a new argument below called " inverted " and conditionally add a new class name
 // called " inverted " and this class name will be in addition to the class name of
 // " custom-button " ( see below )
-const CustomButton = ( { isGoogleSignIn, inverted, children, ...otherProps } ) => (
+
+
+// -- Mark 3 --
+// lecture 156: styled-components in Our App 3
+// let's use styled-components to do the following:
+/*
+className=
+{
+    `${ inverted       ? 'inverted'       : '' }
+     ${ isGoogleSignIn ? 'google-sign-in' : '' }
+     custom-button`
+}
+*/
+
+// so first let's create a new file called custom-button.styles.jsx and let's go to that
+// file and now we are back from custom-button.styles.jsx and let's import in the
+// CustomButtonContainer component and make sure we comment out
+// " import './custom-button.styles.scss'; " above
+import { CustomButtonContainer } from './custom-button.styles';
+// End of -- Mark 3 --
+
+
+const CustomButton = ( { children, ...props } ) => (
     // remember, clicking on a button element and / or  an input element will trigger the
     // onSubmit property that is located inside our form element ( which is inside the SignIn
     // component ) as long as both the button and input elements have their type attribute set
     // equal to " submit " or " type = "submit" "
-    <button
+
+    // -- Mark 3 -- continued
+    // lecture 156: styled-components in Our App 3   
+    // and then change <button></button> below to <CustomButtonContainer></CustomButtonContainer>
+    // and then change
+    // " const CustomButton = ( { isGoogleSignIn, inverted, children, ...otherProps } ) => ( " to
+    // " const CustomButton = ( { children, ...props } ) => ( "
+    // and then change
+    /*
       className=
       {
           `${ inverted       ? 'inverted'       : '' }
-           ${ isGoogleSignIn ? 'google-sign-in' : '' }
-           custom-button`
+            ${ isGoogleSignIn ? 'google-sign-in' : '' }
+            custom-button`
       }
       { ...otherProps }
-    >
+    */
+    // to:
+    // {  ...props }
+    // and by spreading in the " props " ( i.e. isGoogleSignIn, inverted, custom-button or other
+    // props ) we will render one of the following css style blocks: " googleSignInStyles ",
+    // " invertedButtonStyles " or " buttonStyle " inside the CustomButtonContainer component or
+    // in other words we are adding the relevant styles to the CustomButtonContainer styles
+    // and this happens because the " props " are passed down to the getButtonStyles function and
+    // the getButtonStyles function is defined in the custom-button.styles.jsx file and then
+    // included the CustomButtonContainer component and the getButtonStyles function uses the
+    // " props " that are passed to the CustomButtonContainer component in this file ( see below )
+    // to conditional render one of three different css blocks: " googleSignInStyles ",
+    // " invertedButtonStyles " or " buttonStyle "
+
+    // so instead of contionally rendering different classes as we did before we are now rendering
+    // css blocks which pattern seems to make more sense
+
+    // now if we go to our app we see our buttons are not working extirely as expected
+
+    // Yihua recommends we convert the entire app over to styled components and if we run into
+    // any problems Yihua has included a link with the app coverted over to styled-components
+
+    <CustomButtonContainer { ...props }>
         { children }
-    </button>
+    </CustomButtonContainer>
 );
-// End of -- Mark 2 --
+// End of -- Mark 2 and Mark 3 --
 
 
 export default CustomButton;

@@ -86,20 +86,24 @@ const middlewares = [];
 // uploaded sucessfully
 
 // and if I go to my app that is being hosted on heroku and located at
-// " https://course-crown-clothing.herokuapp.com/ " I see the changes were uploaded
-// sucessfully 
+// " https://course-crown-clothing.herokuapp.com/ " I see that the changes were uploaded
+// sucessfully or I see that redux logger is no longer logging actions / state inside the
+// console
 
-// 
-
-
+// and just like that our production application is pretty much finished so that was really
+// easy; however, the caveat with heroku is that the free account is running on a shared dino
+// and all that means is that we are only given a certain amount of time per month for free
+// and whenever we do " git push heroku master " and we go through the heroku build process
+// we are using up our free time and Yihua said he thinks heroku gives us something like 500
+// minutes per month which is pretty good and if you attach a credit card to your heroku
+// account then you will get more hours and now that we have heroku serving up our live
+// website we can move on to the next section of the course
 
 if ( process.env.NODE_ENV === 'development' ) {
 
     middlewares.push( logger );
 
 }
-
-
 // End of -- Mark 2 --
 
 

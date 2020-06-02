@@ -33,6 +33,7 @@ const config = {
 };
 
 
+
 // -- Mark 1 --
 // lecture 89: Storing User Data in Firebase
 // so the function we are going to write is going to allow us to take that user auth object
@@ -184,6 +185,15 @@ export const createUserProfileDocument = async ( userAuth, additionalData ) => {
     // and even function calls ${ myFunc( 'argument' ) } "
     // so we use string interpolation to get the value for " userAuth.uid "
     const userRef = firestore.doc( `users/${ userAuth.uid }` );
+    
+    /*
+    const collectionRef = firestore.collection( 'users' );
+
+    const collectionSnapshot = await collectionRef.get();
+
+    console.log( collectionSnapshot );
+    console.log( { collection : collectionSnapshot.docs.map( ( doc ) => doc.data() ) } );
+    */
 
     // and we will get back the userRef at that location and then we will get a snapshot and
     // using that snapshot we will be able to figure out whether or not there is any data
@@ -289,6 +299,287 @@ export const createUserProfileDocument = async ( userAuth, additionalData ) => {
 }
 
 // End of -- Mark 1 --
+
+
+// lecture 162: Moving Our Shop Data to Firebase
+// -- Mark 2 --
+export const addCollectionAndDocuments = async ( collectionKey, objectsToAdd ) => {
+    // inside our function we are going to create the collection using the collection key
+    const collectionRef = firestore.collection( collectionKey );
+    // next, if we start adding elements to collectionRef as documents then firebase will start
+    // creating both the collection and the documents inside our firestore database
+
+    // what we need to do next is call our addColletionAndDocuments function in our App
+    // component and do it in a location where we have access to the shop data so let's go
+    // to the App.js file
+
+    // console.log out our collectionRef so I can view it after I update the App component
+    // console.log( collectionRef );
+
+    // -- Mark 3 --
+    // lecture 163: Moving Our Shop Data to Firebase 2
+    // first comment out " console.log( collectionRef ); "
+
+    // do a batch write below and this is easy with firestore because firestore gives us a
+    // batch object and inside the batch object we will add our set calls and then we fire
+    // it off once were done adding all the set calls
+    const batch = firestore.batch();
+
+    // we will loop over the objectToAdd array using forEach() and forEach() is very similar to
+    // map() and the only difference is that forEach() does not return a new array the same way
+    // that .map() does
+    objectsToAdd.forEach( ( object ) => {
+        // what will do below is create a new doc reference which is equal to our collection
+        // reference at .doc() so what this means is we want to get the document at an empty
+        // string or .doc() so we are telling firebase to give me a new document reference
+        // in this collection and randomly generate an ID for me and we can see this if we
+        // do " console.log( newDocRef ); "
+        const newDocRef = collectionRef.doc();
+        // console.log( newDocRef );
+
+        // this results in the following ( from the console ):
+        /*
+firebase.utils.js:340
+
+DocumentReference {_key: DocumentKey, firestore: Firestore, _converter: undefined, _firestoreClient:
+    FirestoreClient}
+firestore: Firestore {_firebaseApp: FirebaseAppImpl, _queue: AsyncQueue, INTERNAL: {…}, _databaseId:
+    DatabaseId, _persistenceKey: "[DEFAULT]", …}
+id: "XEz61BnCet0JAqHwWWmi"
+parent: (...)
+path: "collections/XEz61BnCet0JAqHwWWmi"
+_converter: undefined
+_firestoreClient: FirestoreClient {platform: BrowserPlatform, databaseInfo: DatabaseInfo,
+    credentials: FirebaseCredentialsProvider, asyncQueue: AsyncQueue, clientId: "HdKXfGqwl4gpRKX3ACM2", …}
+_key: DocumentKey {path: ResourcePath}
+__proto__: Object
+
+
+DocumentReference {_key: DocumentKey, firestore: Firestore, _converter: undefined, _firestoreClient:
+    FirestoreClient}
+firestore: Firestore {_firebaseApp: FirebaseAppImpl, _queue: AsyncQueue, INTERNAL: {…}, _databaseId:
+    DatabaseId, _persistenceKey: "[DEFAULT]", …}
+id: "swFD9Ti9zyKrK5gQZgOR"
+parent: (...)
+path: "collections/swFD9Ti9zyKrK5gQZgOR"
+_converter: undefined
+_firestoreClient: FirestoreClient {platform: BrowserPlatform, databaseInfo: DatabaseInfo, credentials:
+    FirebaseCredentialsProvider, asyncQueue: AsyncQueue, clientId: "HdKXfGqwl4gpRKX3ACM2", …}
+_key: DocumentKey {path: ResourcePath}
+__proto__: Object
+
+
+DocumentReference {_key: DocumentKey, firestore: Firestore, _converter: undefined, _firestoreClient:
+    FirestoreClient}
+firestore: Firestore {_firebaseApp: FirebaseAppImpl, _queue: AsyncQueue, INTERNAL: {…}, _databaseId:
+    DatabaseId, _persistenceKey: "[DEFAULT]", …}
+id: "URFt7uqDQzIGscRUGcGU"
+parent: (...)
+path: (...)
+_converter: undefined
+_firestoreClient: FirestoreClient {platform: BrowserPlatform, databaseInfo: DatabaseInfo, credentials:
+    FirebaseCredentialsProvider, asyncQueue: AsyncQueue, clientId: "HdKXfGqwl4gpRKX3ACM2", …}
+_key: DocumentKey {path: ResourcePath}
+__proto__: Object
+
+
+DocumentReference {_key: DocumentKey, firestore: Firestore, _converter: undefined, _firestoreClient:
+    FirestoreClient}
+firestore: Firestore {_firebaseApp: FirebaseAppImpl, _queue: AsyncQueue, INTERNAL: {…}, _databaseId:
+    DatabaseId, _persistenceKey: "[DEFAULT]", …}
+id: "5qcuXl92rtpMlhlbFUeE"
+parent: (...)
+path: (...)
+_converter: undefined
+_firestoreClient: FirestoreClient {platform: BrowserPlatform, databaseInfo: DatabaseInfo, credentials:
+    FirebaseCredentialsProvider, asyncQueue: AsyncQueue, clientId: "HdKXfGqwl4gpRKX3ACM2", …}
+_key: DocumentKey {path: ResourcePath}
+__proto__: Object
+
+
+DocumentReference {_key: DocumentKey, firestore: Firestore, _converter: undefined, _firestoreClient:
+    FirestoreClient}
+firestore: Firestore {_firebaseApp: FirebaseAppImpl, _queue: AsyncQueue, INTERNAL: {…}, _databaseId:
+    DatabaseId, _persistenceKey: "[DEFAULT]", …}
+id: "QsQHNK1bjn8K6G8N8brx"
+parent: (...)
+path: (...)
+_converter: undefined
+_firestoreClient: FirestoreClient {platform: BrowserPlatform, databaseInfo: DatabaseInfo, credentials:
+    FirebaseCredentialsProvider, asyncQueue: AsyncQueue, clientId: "HdKXfGqwl4gpRKX3ACM2", …}
+_key: DocumentKey {path: ResourcePath}
+__proto__: Object
+*/
+
+        // so we see that we logged 5 document reference objects each with its own unique ID
+        // because above we told firestore that we want you to create new document reference
+        // objects but create your own key or unique ID for each object
+
+        // and remember objectsToAdd is represented by our collectionsArray in App.js and the
+        // collections array has 5 main categories which are: hats, sneakers, jackets, womens
+        // and mens so if we did " const newDocRef = collectionRef.doc( object.title ); " and
+        // " console.log( newDocRef ); " we would see the following 5 results or " id : "Hats" "
+        // and " id : "Sneakers" ", etc. but we want the key or id value for the newDocRef to
+        // always be unique so we will leave .doc() blank
+
+        // now comment out " console.log( newDocRef ); "
+
+        // now we need to add the documents using newDocRef.set(); but remember we want to batch
+        // the documents we add to the firestore database so instead of calling
+        // " newDocRef.set(); " we will call batch.set(); and the first argument will be newDocRef
+        // or the new document reference object and the second argument
+        // will be the value we want to set it equal to which is " object "
+        // so were just going to loop through objectsToAdd and then batch the calls together
+        batch.set( newDocRef, object );
+
+    } );
+
+    // now we want to fire off our batch call and what we need to do is call
+    // batch.commit() and .commit() will fire off our batch request and .commit() will return
+    // a promise so let's make our arrow function above an async function and return and await
+    // " batch.commit(); " and we are returning the result from calling " batch.commit(); "
+    // since we may want to do something with the result or return value later and we can
+    // handle the return value by chaining onto the addCollectionAndDocuments() function
+    // or do sometihng like " addCollectionAndDocuments( collectionKey, objectsToAdd ).then() "
+    // and in this case we will handle the return value from " batch.commit(); " inside the
+    // then() call 
+    return await batch.commit();
+
+    // Yihua said to remember that our collectionsArray holds key value pairs that we
+    // do not want in our database such as the routename and ID and we don't need the ID
+    // since we are getting a randomly generated ID from firebase and now let's go to our
+    // App.js file
+
+}
+
+// End of -- Mark 2 and Mark 3 --
+
+
+
+
+// -- Mark 4 --
+// lecture 165: Bringing Shop Data To Our App
+// remember we are trying to convert our " collections " collection to an object
+// because right now our firestore database is returning our data in an array format
+export const convertCollectionsSnapshotToMap = ( collections ) => {
+    // so let's transform the doc object from our QuerySnapshop and remember there were 5 doc
+    // objects in our QuerySnapshot
+    const transformedCollection = collections.docs.map( ( doc ) => {
+        // pull off title and items from doc.data() and remember we have to call .data() in order
+        // to get the data off the snapshot
+        const { title, items } = doc.data();
+
+        // now let's return an object that represents the data that we want for our front end
+        // and return below will return an object for each of the 5 categories in our
+        // " collections " collection and the object will contain the " title ", " item ",
+        // " routename " and " id " properties and to get the routename we give it a value of
+        // " encodeURI( title.toLowerCase() ) " and remember our routes are " localhost:3000/hats "
+        // or " localhost:3000/jackets ", etc., etc. and encodeURI will take the input value and
+        // give us in return a valid routename or route
+        
+        // we also need the id property and value and the id we don't get from doc.data() but
+        // from the document itself so doc.data() must represent third column of data or
+        /*
+        items
+            0
+                id : 23
+                imageUrl : "https://i.ibb.co/7CQVJNm/blue-tank.png"
+                name : "Blue Tanktop"
+                price : 25
+        title : "Womens"
+        */
+
+        // whereas the doc itself must represent the second column or:
+        /*
+        collections
+
+        + Add document
+
+        JQUr46Foq20b6vUvGYp0
+        PMw0lnFb7tWxUOe3bHEv
+        kRrrxVcKtSuXHtjWQz4Q
+        mCGGrwiX1TDVmaEXeNKG
+        uLXuVidFGd6C866dEhNy
+        */
+
+        // so now we have the final shape of the object we want so " transformedCollection " above
+        // will represent 5 objects
+        return {
+            id        : doc.id,
+            routename : encodeURI( title.toLowerCase() ),
+            title     : title,
+            items     : items
+        }
+
+
+    } )
+
+    // but let's double check our work above and console.log out " transformedCollection "
+    console.log( transformedCollection );
+
+
+
+    // -- Mark 5 --
+    // lecture 167: Adding Shop Data to Redux
+    // so we are going to use the reduce() function on our transformedCollection array and what
+    // we want to reduce down to is our final object and remember the reduce() function looks
+    // like the following:
+    /*
+    myArray.reduce( ( accumulator, currentElement ) =>
+        accumulator + currentElement, 0
+    );
+    */ 
+
+    // our initial value will be an empty object and the " collection " will be the currentElement
+    // and remember we have 5 collections that we returned to " transformedCollection " and those
+    // 5 collections are represented by the following 5 keys: " hats, jackets, sneakers, womens,
+    // mens " and we start out with an empty object and then the first iteration through we make
+    // " hats ", for example, equal to the hats collection object so " hats " is the key and the
+    // corresponding value is the hats collection object and this is the same structure as
+    // our SHOP_DATA object:
+    /*
+    const SHOP_DATA = {
+        hats: {
+            id: 1,
+            title: 'Hats',
+            routeName: 'hats',
+            items: [
+                {
+                    id: 1,
+                    name: 'Brown Brim',
+                    imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+                    price: 25
+                },
+                {
+                    id: 2,
+                    name: 'Blue Beanie',
+                    imageUrl: 'https://i.ibb.co/ypkgK0X/blue-beanie.png',
+                    price: 18
+                }
+        }
+    }
+    */
+
+    // so instead of a key that equals " 0 " we have a key that equals " hats " and then
+    // we return our object or " return accumulator; " and then interate into our second collection
+    // object and each time we iterate we add an object to our {} and remember initally this
+    // was an empty object or {} so instead of an array that includes 5 objects we have an
+    // object that includes 5 objects and we changed the keys from " 0 " to " hats ", etc.
+    // and let's go to the shop.component.jsx file and console.log the result to make sure the
+    // below or transformedCollection.reduce() is working
+    return transformedCollection.reduce( ( accumulator, collection ) => {
+            accumulator[ collection.title.toLowerCase() ] = collection;
+            return accumulator;
+        }, {}
+    );
+    // End of -- Mark 5 --
+
+}
+
+// now go back to our shop.component.jsx file and use convertCollectionsSnapshotToMap
+
+// End of -- Mark 4 --
+
 
 
 

@@ -11,11 +11,18 @@
 
 
 import React from 'react';
-import './collection-preview.styles.scss';
+// import './collection-preview.styles.scss';
 // -- Mark 1 --
 // lecture 70: Collection Item
 // import in the CollectionItem component
 import CollectionItem from '../collection-item/collection-item.component';
+
+import {
+    CollectionPreviewContainer,
+    CollectionPreviewTitle,
+    CollectionPreviewItems
+} from './collection-preview.styles';
+
 
 
 // declare a function component and implicitly return some jsx
@@ -38,11 +45,13 @@ const CollectionPreview = ( { title, items } ) => (
     // arrays are or how slow someone's computer may be
 
     // in the next section, we are going to style all this stuff
-    <div className="collection-preview">
+    <CollectionPreviewContainer>
 
-        <h1 className="collection-preview--title">{ title.toUpperCase() }</h1>
+        <CollectionPreviewTitle>
+            { title.toUpperCase() }
+        </CollectionPreviewTitle>
 
-        <div className="collection-preview--preview">
+        <CollectionPreviewItems>
             {
                 items
                 .filter( ( item, index ) => index < 4 )
@@ -106,9 +115,9 @@ const CollectionPreview = ( { title, items } ) => (
                     />
                 ))
             }
-        </div>
+        </CollectionPreviewItems>
 
-    </div>
+    </CollectionPreviewContainer>
 );
 // End of -- Mark 2 --
 

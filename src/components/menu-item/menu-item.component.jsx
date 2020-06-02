@@ -4,7 +4,16 @@ import React from 'react';
 // lecture 67: withRouter()
 import { withRouter } from 'react-router-dom';
 // End of -- Mark 2 --
-import './menu-item.styles.scss';
+// import './menu-item.styles.scss';
+
+
+import {
+    MenuItemContainer,
+    MenuItemBackgroundImage,
+    MenuItemContent,
+    MenuItemContentTitle,
+    MenuItemContentSubTitle
+} from './menu-item.styles';
 
 
 // create a functional component here since we don't really need our component to hold
@@ -30,12 +39,12 @@ const MenuItem = ( { title, imageUrl, size, history, match, linkUrl } ) => (
     // within the container div that will hold our image because we will want our image to
     // increase when we hover over it but we don't want the content div to increase so move the
     // style object into the new div
-    <div
+    <MenuItemContainer
         // to make the menu item boxes for mens and womens larger than the other 3 menu item boxes
         // we can add a class name dynamically and we will use template literals to help us do that
         // so under certain circumstances this div will have 2 class names: " large " or
         // ` ${ size } ` and " menu-item "
-        className={ `${ size } menu-item` }
+        className={ `${ size }` }
 
         // -- Mark 2 -- continued
         // lecture 67: withRouter()
@@ -62,25 +71,19 @@ const MenuItem = ( { title, imageUrl, size, history, match, linkUrl } ) => (
         onClick={ () => history.push( `${ match.url }${ linkUrl }` ) }
         // End of -- Mark 2 --
     >
-        <div
+        <MenuItemBackgroundImage
             className="background-image"
-            style={
-                {
-                    // we have to do something like this for our image:
-                    // " background-image: url("paper.gif"); "
-                    backgroundImage : `url( ${ imageUrl } )`
-                }
-            }
-        >
-        </div>
-        <div className="content">
+            imageUrl={ imageUrl }
+        />
 
-            <h1 className="title">{ title.toUpperCase() }</h1>
-            <span className="subtitle">SHOP NOW</span>
+        <MenuItemContent className="content">
 
-        </div>
+            <MenuItemContentTitle>{ title.toUpperCase() }</MenuItemContentTitle>
+            <MenuItemContentSubTitle>SHOP NOW</MenuItemContentSubTitle>
 
-    </div>
+        </MenuItemContent>
+
+    </MenuItemContainer>
     // End of -- Mark 1 --
 
 );

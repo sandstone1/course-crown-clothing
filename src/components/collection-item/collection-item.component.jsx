@@ -12,7 +12,7 @@
 
 import React from 'react';
 // import in the style sheet
-import './collection-item.styles.scss';
+// import './collection-item.styles.scss';
 
 // -- Mark 1 --
 // lecture 109: Add to Cart Styling
@@ -20,7 +20,7 @@ import './collection-item.styles.scss';
 // added the inverted property to the CustomButton component so that we will get the proper
 // styling for this particular button and remember go to the style sheet for the CustomButton
 // component for details on styling
-import CustomButton from '../custom-button/custom-button.component';
+// import CustomButton from '../custom-button/custom-button.component';
 // End of -- Mark 1 --
 
 
@@ -162,6 +162,17 @@ import { addItem } from '../../redux/cart/cart.actions';
 // End of -- Mark 2 --
 
 
+// -- Mark 3 --
+// lecture 156: styled-components in Our App 3
+import { 
+    CollectionItemContainer,
+    CollectionItemImage,
+    CollectionItemFooter,
+    CollectionItemButton
+} from './collection-item.styles';
+// End of -- Mark 3 --
+
+
 // don't need any state so make another functional component
 const CollectionItem = ( { item, addItem } ) => {
 
@@ -169,37 +180,37 @@ const CollectionItem = ( { item, addItem } ) => {
         
     return (
 
-        <div className="collection-item">
+        // -- Mark 3 -- continued
+        // lecture 156: styled-components in Our App 3
+        // change divs into styled-components and remember to comment out
+        // " import './collection-item.styles.scss'; " above and comment out
+        // " import CustomButton from '../custom-button/custom-button.component'; " above
 
-            <div 
-                className="collection-item--image"
-                // add our style directly inside our <div>
-                style={
-                    {
-                        // we have to do something like this for our image:
-                        // " background-image: url("paper.gif"); "
-                        backgroundImage : `url( ${ imageUrl } )`
-                    }
-                }
+        <CollectionItemContainer>
+
+            <CollectionItemImage
+                className="collection-item-container--image"
+                imageUrl={ imageUrl }
             >
-            </div>
+            </CollectionItemImage>
 
-            <div className="collection-item--footer">
-                <span className="name">{ name }</span>
-                <span className="price">{ price }</span>
-            </div>
+            <CollectionItemFooter>
+                <span>{ name }</span>
+                <span>{ price }</span>
+            </CollectionItemFooter>
 
-            <CustomButton
+            <CollectionItemButton
+                className="collection-item-container--button"
                 inverted
                 onClick={ () => addItem( item ) }
             >
                 Add to cart
-            </CustomButton>
+            </CollectionItemButton>
 
-        </div>
+        </CollectionItemContainer>
 
     );
-
+    // End of -- Mark 3 --
 }
 
 

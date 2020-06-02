@@ -3,7 +3,7 @@ import React from 'react';
 import './cart-dropdown.styles.scss';
 
 // import in our CustomButton component since we know we need one
-import CustomButton from '../custom-button/custom-button.component';
+// import CustomButton from '../custom-button/custom-button.component';
 
 
 // -- Mark 1 --
@@ -184,14 +184,20 @@ export default connect( null, mapDispatchToProps )( CartDropdown );
 // End of -- Mark 4 --
 
 
+import { 
+    CartDropDownContainer,
+    CartDropDownItemsContainer,
+    CartDropDownItemsEmptyMessage,
+    CartDropDownButton
+} from './cart-dropdown.styles';
+
+
 
 const CartDropdown = ( { cartItems, history, dispatch } ) => (
 
-    <div 
-        className="cart-dropdown"
-    >
+    <CartDropDownContainer>
 
-        <div className="cart-dropdown--items">
+        <CartDropDownItemsContainer>
 
             {
                 cartItems.length > 0 ? (
@@ -202,24 +208,24 @@ const CartDropdown = ( { cartItems, history, dispatch } ) => (
                         />
                     ) )
                 ) : (
-                    <span className="cart-dropdown--empty-message">Your cart is empty</span>
+                    <CartDropDownItemsEmptyMessage>Your cart is empty</CartDropDownItemsEmptyMessage>
                 )
             }
 
-        </div>
+        </CartDropDownItemsContainer>
 
-        <CustomButton onClick=
+        <CartDropDownButton onClick=
         { 
             () => {
-                history.push( '/checkout' );
-                dispatch( toggleCart() );
+                history.push( '/checkout' )
+                dispatch( toggleCart() )
             }
         }
         >
             GO TO CHECKOUT
-        </CustomButton>
+        </CartDropDownButton>
 
-    </div>
+    </CartDropDownContainer>
 
 );
 

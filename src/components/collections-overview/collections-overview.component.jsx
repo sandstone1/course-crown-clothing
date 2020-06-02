@@ -2,7 +2,7 @@
 // I built this page by memory and nothing really new here and go back to shop.component.jsx
 // and modify that component to be a simple presentational component
 import React from 'react';
-import './collections-overview.styles.scss';
+// import './collections-overview.styles.scss';
 
 import CollectionPreview from '../collection-preview/collection-preview.component';
 
@@ -11,9 +11,12 @@ import { createStructuredSelector } from 'reselect';
 import { selectCollectionForPreview } from '../../redux/shop/shop.selectors';
 
 
+import { CollectionsOverviewContainer } from './collections-overview.styles';
+
+
 const CollectionsOverview = ( { collections } ) => (
 
-    <div className="collection-overview">
+    <CollectionsOverviewContainer>
     {
         collections.map( ( { id, title, items } ) => (
             <CollectionPreview
@@ -23,7 +26,7 @@ const CollectionsOverview = ( { collections } ) => (
             />
         ))
     }
-    </div>
+    </CollectionsOverviewContainer>
 
 );
 

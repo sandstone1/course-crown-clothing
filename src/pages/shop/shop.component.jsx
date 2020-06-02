@@ -101,7 +101,415 @@ const mapStateToProps = ( state ) => (
 // category pages
 // End of -- Mark 1 --
 
+// -- Mark 4 --
+// lecture 165: Bringing Shop Data To Our App
+// the first thing we need to do is convert our funcitonal component to a class based component
+// so change " const ShopPage = ( { match } )  => (} " to
+// " class ShopPage extends React.Component {} "
 
+// import in firestore and see notes below for details and later we import in
+// " convertCollectionsSnapshotToMap " function
+import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils';
+
+
+// -- Mark 5 --
+// lecture 167: Adding Shop Data to Redux
+import { connect } from 'react-redux';
+import { updateCollections } from '../../redux/shop/shop.actions';
+// End of -- Mark 5 --
+
+
+// -- Mark 6 --
+// lecture 169: WithSpinner HOC 2
+import WithSpinner from '../../components/with-spinner/with-spinner.component';
+
+// the first thing we need to figure out is how were going to set the isLoading value
+// and the best way to do that is inside the ShopPage component so go to -- Mark 6 -- below
+// End of -- Mark 6 --
+
+// -- Mark 6 -- continued
+// lecture 169: WithSpinner HOC 2
+// remember our 2 route components below will need to know whether the state.loading is true
+// or false and they need to be aware of whether or not the loading is still happening and
+// now let's create a 2 new components
+const CollectionsOverviewWithSpinner = WithSpinner( CollectionsOverview );
+const CollectionPageWithSpinner = WithSpinner( CollectionPage );
+
+// now we just need to render these 2 components within their respective routes and then
+// pass to each component the loading state through a prop and go to -- Mark 6 -- inside
+// render()
+// End of -- Mark 6 --
+
+
+class ShopPage extends React.Component {
+
+
+    // -- Mark 6 -- continued
+    // lecture 169: WithSpinner HOC 2
+    // let's add a state object with the loading property set to " true " and now go to
+    // -- Mark 6 -- below
+    state = {
+        loading : true
+    };
+    // End of -- Mark 6 --
+
+
+    // need to write our componentDidMount method and put our fetch call inside componentDidMount
+    // and Yihua said whenever we do this pattern we will most likely subscribe to some reference
+    // and therefore we need to remember to unsubscribe when we unmount our component and Yihua
+    // will definately touch on this subscriber pattern a little more in a couple lessons from
+    // now so let's start off by setting unsubscribeFromSnapshot = null;
+    unsubscribeFromSnapshot = null;
+
+    // now we are going to get a snapshot representation of our " collections " array inside
+    // our firestore database and we will fetch that inside our component did mount method
+    componentDidMount() {
+        // now we need to pull in our firestore library from our firebase.utils.js file
+        // so do this above
+        const collectionRef = firestore.collection( 'collections' );
+
+        // now that we have the reference we want to get this " collections " data and
+        // to do that we use the onSnapshot method again so we write collectionRef.onSnapshot()
+        // and onSnapshot is a listener function and whenever the collectionRef updates or
+        // whenever " collectionRef.onSnapshot() " runs for the first time collectionRef
+        // will send us the " snapshot " object which represents the " collections " collection
+        // and we want this request to be asynchronous and first let's console log out the snapshot
+        // to see what it is and the result of " console.log( snapshot ); " is:
+        /*
+        QuerySnapshot {_firestore: Firestore, _originalQuery: Query, _snapshot: ViewSnapshot,
+        _converter: undefined, _cachedChanges: null, …}
+            docs: Array(5)
+                0: QueryDocumentSnapshot {_firestore: Firestore, _key: DocumentKey, _document:
+                Document, _fromCache: false, _hasPendingWrites: false, …}
+                1: QueryDocumentSnapshot {_firestore: Firestore, _key: DocumentKey, _document:
+                Document, _fromCache: false, _hasPendingWrites: false, …}
+                2: QueryDocumentSnapshot {_firestore: Firestore, _key: DocumentKey, _document:
+                Document, _fromCache: false, _hasPendingWrites: false, …}
+                3: QueryDocumentSnapshot {_firestore: Firestore, _key: DocumentKey, _document:
+                Document, _fromCache: false, _hasPendingWrites: false, …}
+                4: QueryDocumentSnapshot {_firestore: Firestore, _key: DocumentKey, _document:
+                Document, _fromCache: false, _hasPendingWrites: false, …}
+                length: 5
+                __proto__: Array(0)
+            empty: false
+            metadata: SnapshotMetadata {hasPendingWrites: false, fromCache: false}
+            query: Query
+            size: 5
+            _cachedChanges: null
+            _cachedChangesIncludeMetadataChanges: null
+            _converter: undefined
+            _firestore: Firestore {_firebaseApp: FirebaseAppImpl, _queue: AsyncQueue, INTERNAL: {…},
+                _databaseId: DatabaseId, _persistenceKey: "[DEFAULT]", …}
+            _originalQuery: Query {path: ResourcePath, collectionGroup: null, explicitOrderBy:
+                Array(0), filters: Array(0), limit: null, …}
+            _snapshot: ViewSnapshot {query: Query, docs: DocumentSet, oldDocs: DocumentSet,
+                docChanges: Array(5), mutatedKeys: SortedSet, …}
+            __proto__: Object
+        */
+
+        // so we see that we got back a QuerySnapshot object with a property called " docs "
+        // and we get back 5 docs and if we want the value we will have to call .data() on
+        // them and inside " docs " we see an id property with the same value as the id property
+        // inside our firestore database or " collections/ids " so these 5 docs represent the
+        // 5 categories inside " collections " or " hats, sneakers, jackets, womens and mens "
+        // so we know were getting the right data but now we need to transform this data into
+        // the shape that we need as well as add any key values pairs that we need and we will
+        // do that inside our firebase.utils.js file and we will create a new function similar
+        // to createUserProfileDocument() so go to the firebase.utils.js file
+
+        // now we are back from our firebase.utils.js file let's change
+        // " console.log( snapshot ); " to " convertCollectionsSnapshotToMap( snapshot ); "
+        // and after we call convertCollectionsSnapshotToMap( snapshot ); we will see the value
+        // of " transformedCollection " in the console and remember we console.logged out
+        // " transformedCollection " or " console.log( transformedCollection ) " in our
+        // firebase.utils.js file so that we could double check the data we are getting back
+        // from our firestore database and make sure it matches the data we what
+        /*
+        (5) [{…}, {…}, {…}, {…}, {…}]
+            0:
+                id: "JQUr46Foq20b6vUvGYp0"
+                items: Array(7)
+                    0: {id: 23, imageUrl: "https://i.ibb.co/7CQVJNm/blue-tank.png", name: "Blue Tanktop", price: 25}
+                    1: {id: 24, imageUrl: "https://i.ibb.co/4W2DGKm/floral-blouse.png", name: "Floral Blouse", price: 20}
+                    2: {id: 25, imageUrl: "https://i.ibb.co/KV18Ysr/floral-skirt.png", name: "Floral Dress", price: 80}
+                    3: {id: 26, imageUrl: "https://i.ibb.co/N3BN1bh/red-polka-dot-dress.png", name: "Red Dots Dress", price: 80}
+                    4: {id: 27, imageUrl: "https://i.ibb.co/KmSkMbH/striped-sweater.png", name: "Striped Sweater", price: 45}
+                    5: {id: 28, imageUrl: "https://i.ibb.co/v1cvwNf/yellow-track-suit.png", name: "Yellow Track Suit", price: 135}
+                    6: {id: 29, imageUrl: "https://i.ibb.co/qBcrsJg/white-vest.png", name: "White Blouse", price: 20}
+                        length: 7
+                __proto__: Array(0)
+                routename: "womens"
+                title: "Womens"
+            __proto__: Object
+            1: {id: "PMw0lnFb7tWxUOe3bHEv", routename: "mens", title: "Mens", items: Array(6)}
+            2: {id: "kRrrxVcKtSuXHtjWQz4Q", routename: "jackets", title: "Jackets", items: Array(5)}
+            3: {id: "mCGGrwiX1TDVmaEXeNKG", routename: "hats", title: "Hats", items: Array(9)}
+            4: {id: "uLXuVidFGd6C866dEhNy", routename: "sneakers", title: "Sneakers", items: Array(8)}
+            length: 5
+            __proto__: Array(0)
+        */
+
+        // so we see that we are gettin back our id, items, routename and title properties with
+        // the corresponding values so our " convertCollectionsSnapshotToMap( snapshot ); "
+        // is working
+        
+        // and remember we can also see that we are getting back an array of objects or
+        // " [{…}, {…}, {…}, {…}, {…}] " so now that we have our data in the right shape
+        // and we've put the data in the right place in our component tree we need to convert
+        // this from an array to an object and remember we converted our SHOP_DATA from an array
+        // to an object in our state normalization lectures or in
+        // " lecture 137: Data Normalization + Collection Page " and we will convert our data
+        // from an array to an object in the next lecture        
+
+        // collectionRef.onSnapshot( async ( snapshot ) => {
+
+            // -- Mark 5 -- continued
+            // lecture 167: Adding Shop Data to Redux
+            // remember collectionsMap equals the return value from
+            // transformedCollection.reduce() from the firebase.utils.js file or :
+            /*
+            return transformedCollection.reduce( ( accumulator, collection ) => {
+                    accumulator[ collection.title.toLowerCase() ] = collection;
+                    return accumulator;
+                }, {}
+            );
+            */
+
+            // and now console.log collectionsMap to see what we end up with or
+            // " console.log( collectionsMap ); ":
+            /*
+            {womens: {…}, mens: {…}, jackets: {…}, hats: {…}, sneakers: {…}}
+                hats:
+                    id: "mCGGrwiX1TDVmaEXeNKG"
+                    items: Array(9)
+                        0: {id: 1, imageUrl: "https://i.ibb.co/ZYW3VTp/brown-brim.png", name: "Brown Brim", price: 25}
+                        1: {id: 2, imageUrl: "https://i.ibb.co/ypkgK0X/blue-beanie.png", name: "Blue Beanie", price: 18}
+                        2: {id: 3, imageUrl: "https://i.ibb.co/QdJwgmp/brown-cowboy.png", name: "Brown Cowboy", price: 35}
+                        3: {id: 4, imageUrl: "https://i.ibb.co/RjBLWxB/grey-brim.png", name: "Grey Brim", price: 25}
+                        4: {id: 5, imageUrl: "https://i.ibb.co/YTjW3vF/green-beanie.png", name: "Green Beanie", price: 18}
+                        5: {id: 6, imageUrl: "https://i.ibb.co/rKBDvJX/palm-tree-cap.png", name: "Palm Tree Cap", price: 14}
+                        6: {id: 7, imageUrl: "https://i.ibb.co/bLB646Z/red-beanie.png", name: "Red Beanie", price: 18}
+                        7: {id: 8, imageUrl: "https://i.ibb.co/1f2nWMM/wolf-cap.png", name: "Wolf Cap", price: 14}
+                        8: {id: 9, imageUrl: "https://i.ibb.co/X2VJP2W/blue-snapback.png", name: "Blue Snapback", price: 16}
+                        length: 9
+                        __proto__: Array(0)
+                    routename: "hats"
+                    title: "Hats"
+                    __proto__: Object
+                jackets: {id: "kRrrxVcKtSuXHtjWQz4Q", routename: "jackets", title: "Jackets", items: Array(5)}
+                mens: {id: "PMw0lnFb7tWxUOe3bHEv", routename: "mens", title: "Mens", items: Array(6)}
+                sneakers: {id: "uLXuVidFGd6C866dEhNy", routename: "sneakers", title: "Sneakers", items: Array(8)}
+                womens: {id: "JQUr46Foq20b6vUvGYp0", routename: "womens", title: "Womens", items: Array(7)}
+                __proto__: Object
+            */
+
+            // and this structure is identical to our SHOP_DATA object that is stored on our front
+            // end and this is what we want because this structure results in better performance
+            // and notice our top layer above is an object with keys and corresponding values that
+            // are also objects or
+            // " {womens: {…}, mens: {…}, jackets: {…}, hats: {…}, sneakers: {…}} "
+
+            // now that we " collectionsMap " we want to store this in our shop reducer and how
+            // do we do this? we will do do this by updating our redcuer and creating an action
+            // file ( so we can fire actions to update the reducer ) and types file so create a
+            // new file called shop.types.js and shop.actions.js and let's go to the
+            // shop.types.js file
+
+            // const collectionsMap = convertCollectionsSnapshotToMap( snapshot );
+            // console.log( collectionsMap );
+
+            // now I'm back from the shop.types.js file and I added our mapDispatchToProps
+            // function below so now let's fire our action creator or " updateCollections "
+            // and by doing this we will update our reducer and remember we will fire our
+            // action creator and thereby update our reducer evertime the snapshot object
+            // changes or everytime we update our firestore database or the " collections "
+            // collection inside our firestore database
+            const { updateCollections } = this.props;
+            
+            // updateCollections( collectionsMap );
+
+            // -- Mark 6 -- continued
+            // lecture 169: WithSpinner HOC 2
+            // now that we have set our state object above let call this.setState() and change
+            // our state once we call " updateCollections( collectionsMap ); " because once we do
+            // this we know we got our snapshot object back from our firestore database and we've
+            // updated our shop reducer by calling our action creator " updateCollections() "
+            // so we can turn off our spinner
+            // this.setState( { loading : false  } );
+
+            fetch( 'https://firestore.googleapis.com/v1/projects/crown-clothing-25f2b/databases/(default)/documents/collections' )
+            .then( ( response ) => response.json() )
+            .then( ( collections ) => console.log( collections ) );
+
+            // now that we have determined where in the logic the loading state will change we
+            // have to figure out how to use our WithSpinner HOC and as we know our WithSpinner
+            // is a HOC that takes a component as an argument then return another component and
+            // in this case the returned component is our Spinner component and the Spinner
+            // component will render the wrapper component when isLoading is false and go to
+            // -- Mark 6 -- above
+            // End of -- Mark 6 --
+
+
+            // now if we save this file and go to our app and check next state in redux
+            // logger we should see our " collections " object and let's check that now
+            // and the result is:
+            /*
+            shop: {collections: {…}}
+                collections: {womens: {…}, mens: {…}, jackets: {…}, hats: {…}, sneakers: {…}}
+                __proto__: Object
+            */    
+              
+            /*
+            shop:
+                collections:
+                    hats: {id: "mCGGrwiX1TDVmaEXeNKG", routename: "hats", title: "Hats", items: Array(9)}
+                    jackets: {id: "kRrrxVcKtSuXHtjWQz4Q", routename: "jackets", title: "Jackets", items: Array(5)}
+                    mens: {id: "PMw0lnFb7tWxUOe3bHEv", routename: "mens", title: "Mens", items: Array(6)}
+                    sneakers: {id: "uLXuVidFGd6C866dEhNy", routename: "sneakers", title: "Sneakers", items: Array(8)}
+                    womens: {id: "JQUr46Foq20b6vUvGYp0", routename: "womens", title: "Womens", items: Array(7)}
+                    __proto__: Object
+                __proto__: Object
+            */
+
+            /*
+            shop:
+                collections:
+                    hats:
+                        id: "mCGGrwiX1TDVmaEXeNKG"
+                        items: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+                        routename: "hats"
+                        title: "Hats"
+                        __proto__: Object
+                    jackets: {id: "kRrrxVcKtSuXHtjWQz4Q", routename: "jackets", title: "Jackets", items: Array(5)}
+                    mens: {id: "PMw0lnFb7tWxUOe3bHEv", routename: "mens", title: "Mens", items: Array(6)}
+                    sneakers: {id: "uLXuVidFGd6C866dEhNy", routename: "sneakers", title: "Sneakers", items: Array(8)}
+                    womens: {id: "JQUr46Foq20b6vUvGYp0", routename: "womens", title: "Womens", items: Array(7)}
+                    __proto__: Object
+                __proto__: Object
+            */
+
+            // so this is correct and we can see that the collections keys such as " hats " have
+            // an id that matches our firestore " hats " id or " mCGGrwiX1TDVmaEXeNKG  " and
+            // this is in the shape and format that we were looking for or expecting so that is
+            // good
+
+            // also if we look at next state in the console:
+            /*
+            next state {user: {…}, cart: {…}, directory: {…}, shop: {…}, _persist: {…}}
+                cart: {show: false, cartItems: Array(2)}
+                directory: {sections: Array(5)}
+                shop: {collections: {…}}
+                user: {currentUser: {…}}
+                _persist: {version: -1, rehydrated: true}
+                __proto__: Object
+            */
+
+            // we see our 4 reducers listed: " cart ", " directory ", " shop " and " user " and
+            // this matches our root reducer:
+
+            /*
+            const rootReducer = combineReducers(
+                {  
+                    user      : userReducer,
+                    cart      : cartReducer,
+                    directory : directoryReducer,
+                    shop      : shopReducer
+                }
+            );
+            */
+
+            // so all of our state or all 4 of our reducers are working correctly and being
+            // displayed in the next state category in redux logger
+
+            // we will remove our SHOP_DATA from our INITIAL_STATE in our shop reducer
+            // in the next lesson
+
+            // End of -- Mark 5 --
+
+        // } );
+
+    }
+
+    render() {
+        
+        // destructure match off of our props
+        const { match } = this.props;
+
+        // -- Mark 6 -- continued
+        // lecture 169: WithSpinner HOC 2
+        // change " component={ CollectionsOverview } " to
+        // " render={ ( props ) => <CollectionsOverviewWithSpinner isLoading={ loading }
+        // { ...props } /> } "
+        // and remember the " props " argument above contains the history, location and match
+        // properties and these props are passed in by the Route component and passed to our
+        // component and then let's destructure our loading value from our state object and we
+        // do this below and loading will be either true or false and then let's add in our
+        // isLoading key value pair or " isLoading={ loading } " and remember isLoading
+        // will be used inside the WithSpinner HOC to determine what to render ( i.e. either
+        // the spinner or the WrappedComponent and remember the WrapperComponent will be
+        // either the CollectionsOverview component or the CollectionPage component )
+        
+        // let's do the exact same thing for our CollectionPage component
+
+        // now if we go to our application we will see the spinner is spinning while our
+        // component is fetching the back end data and the moment the data comes back and we
+        // update the reducer is the moment the spinner disappears and the WrappedComponent
+        // appears and remember the WrappedComponent will be either the CollectionsOverview
+        // component or the CollectionPage component depending on the route
+
+        // the Spinner component works in the shop page or " localhost:3000/shop " or in the
+        // collection page or " localhost:3000/shop/hats ", for example, and remember our
+        // shop page is rendering either ( depending on the route ) our CollectionsOverview
+        // component which is then rendering our CollectionPreview component or our
+        // CollectionPage component which is then rendering our CollectionItem component
+
+        // so now we have used and built our loading component and it is working great and
+        // is a really nice piece of UI
+
+        // now we can use this same pattern or use our WithSpinner HOC anywhere we need to
+        // fetch asynchronous data from the back end and remember there are a lot of projects
+        // out there that leverage this HOC pattern of wrapping components and returning new
+        // components ( i.e. like our Spinner component ) and the more you look at this HOC
+        // pattern and more you practice with this pattern the more it will make sense and the
+        // more you'll see how to use and leverage this HOC pattern
+
+        // so now our application is wired with our back end so if we updated our backend with
+        // a new document object, for example, then our application will update accordingly and
+        // this now mimics a real life application so we now understand how to build a front
+        // end application that leverages data on the back end
+        const { loading } = this.state;
+
+
+        return (
+
+            <div className="shop-page">
+
+                <Route
+                    path={ `${ match.path }` }
+                    exact={ true }
+                    render={ ( props ) => (
+                        <CollectionsOverviewWithSpinner isLoading={ loading } { ...props } />
+                     ) }
+                />
+                <Route
+                    path={ `${ match.path }/:collectionId` }
+                    render={ ( props ) => (
+                        <CollectionPageWithSpinner isLoading={ loading } { ...props } />
+                    ) }
+                />
+    
+            </div>
+
+        );
+
+    }
+    
+}
+// End of -- Mark 4 and Mark 6 --
+
+
+
+/*
 const ShopPage = ( { match } )  => (
 
     // need to copy and paste the collections array data from the last lecture
@@ -493,7 +901,7 @@ const ShopPage = ( { match } )  => (
     // " categoryId " does is it allows us to access the categoryId as a parameter on the
     // match object and we can do this when were on the category page and now let's go back
     // to the category.component.jsx file
-
+/*
     <div className="shop-page">
 
         <Route  
@@ -515,6 +923,8 @@ const ShopPage = ( { match } )  => (
     // }
 
 );
+*/
+
 
 /*
 const mapStateToProps = createStructuredSelector(
@@ -526,4 +936,18 @@ const mapStateToProps = createStructuredSelector(
 );
 */
 
-export default ShopPage;
+
+// -- Mark 5 -- continued
+// lecture 167: Adding Shop Data to Redux
+// add in the connect and mapStateToDispatch functions below and then set up the dispatch
+// function where we dispatch the action creator " updateCollections " with the argument of
+// " collectionsMap "
+const mapDispatchToProps = ( dispatch ) => (
+    {
+        updateCollections : ( collectionsMap ) => dispatch( updateCollections( collectionsMap ) )
+    }
+);
+
+
+export default connect( null, mapDispatchToProps )( ShopPage );
+// End of -- Mark 5 --

@@ -4,9 +4,9 @@ import React from 'react';
 // import in our shopping icon
 // from LogRocket: " SVGs can be imported and used directly as a React component in your React
 // code. The image is not loaded as a separate file, instead, it’s rendered along the HTML. "
-import { ReactComponent as ShoppingIcon } from '../../assets/shopping-bag.svg';
+// import { ReactComponent as ShoppingIcon } from '../../assets/shopping-bag.svg';
 // import in our style sheet
-import './cart-icon.styles.scss';
+// import './cart-icon.styles.scss';
 
 
 // -- Mark 1 --
@@ -20,6 +20,13 @@ import { toggleCart } from '../../redux/cart/cart.actions';
 // lecture 119: Reselect Library
 import { selectCartItemsCount } from '../../redux/cart/cart.selectors';
 // End of -- Mark 3 --
+
+
+import {
+    CartIconContainer,
+    ShoppingIcon,
+    CartIconItemCount
+} from './cart-icon.styles';
 
 
 const CartIcon = ( { toggleCart, itemCount } ) => (
@@ -54,15 +61,14 @@ const CartIcon = ( { toggleCart, itemCount } ) => (
 
     // so our toggleCart action generator is working and the cart reducer is toggling state
     // between " show : false " and " show : true "
-    <div
-        className="cart-icon"
+    <CartIconContainer
         onClick={ toggleCart }
     >
 
-        <ShoppingIcon className="cart-icon--icon" />
-        <span className="cart-icon--item-count">{ itemCount }</span>
+        <ShoppingIcon />
+        <CartIconItemCount>{ itemCount }</CartIconItemCount>
 
-    </div>
+    </CartIconContainer>
     // End of -- Mark 1 --
 
 );

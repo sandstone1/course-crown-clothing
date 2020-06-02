@@ -63,6 +63,18 @@ import { selectCollection } from '../../redux/shop/shop.selectors';
 // to directory.reducer.js
 
 
+// -- Mark 3 --
+// lecture 168: WithSpinner HOC
+// remember our collections map object may be null when we first load the application
+// because we may not have received the collections map object data from our backend
+// so we have to create what's called a loading state and in this loading state what
+// we want to do is render a spinner and to build the spinner we will use the HOC pattern
+// that we've explored before but first let's create a new folder called " with-spinner "
+// and 2 new files called " with-spinner.component.jsx " and " with-spinner.styles.jsx "
+// and let's go to with-spinner.styles.jsx next
+// End of -- Mark 3 --
+
+
 const CollectionPage = ( { collection } ) => {
 
     const { title, items } = collection;
@@ -75,16 +87,14 @@ const CollectionPage = ( { collection } ) => {
 
             <div className="collection-page--items">
             {
-                items.map( ( item ) =>
-                
-                    (
-                        <CollectionItem
-                            key={ item.id }
-                            item={ item }            
-                        />
-                    )
-            
-                )
+                items.map( ( item ) => (
+
+                    <CollectionItem
+                        key={ item.id }
+                        item={ item }            
+                    />
+
+                ) )
             }
             </div>
 
