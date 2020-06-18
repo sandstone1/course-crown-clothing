@@ -29,7 +29,7 @@ const cartReducer = ( state = INITIAL_STATE, action ) => {
 
     switch ( action.type ) {
 
-        case CartActionTypes.TOGGLE_CART :  
+        case CartActionTypes.TOGGLE_CART :
             return {
                 ...state,
                 show : !state.show

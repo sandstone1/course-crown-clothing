@@ -9,14 +9,52 @@
 //     Collection-Preview - Functional and Presentational
 //       Collection-Item  - Functional and Presentational
 
-
+/*
 import React from 'react';
 // import in the shop data
 // import SHOP_DATA from './shop.data.js';
 
 
+// -- Mark 7 --
+// lecture 174: Redux Thunk
+// first let's remove all the code we don't need anymore so take out or comment out the
+// following:
+
+/*
+state = {
+    loading : true
+};
+*/
+
+// and:
+/*
+unsubscribeFromSnapshot = null;
+*/
+
+// and everything inside componentDidMount():
+/*
+const collectionRef = firestore.collection( 'collections' );
+collectionRef.onSnapshot( async ( snapshot ) => {}
+const collectionsMap = convertCollectionsSnapshotToMap( snapshot );
+const { updateCollections } = this.props;
+updateCollections( collectionsMap );
+this.setState( { loading : false  } );
+*/
+
+// and:
+/*
+import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils';
+const { loading } = this.state;
+*/
+
+// and let's comment out all this code and start anew at the bottom of this file
+// End of -- Mark 7 --
+
+
+
 // -- Mark 3 --
 // lecture 133: Nested Routing in Shop Page
+/*
 import { Route } from 'react-router-dom';
 import CollectionPage from '../collection/collection.component';
 // End of -- Mark 2 --
@@ -36,6 +74,7 @@ import { createStructuredSelector } from 'reselect';
 import { selectShopCollections } from '../../redux/shop/shop.selectors';
 */
 
+/*
 import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
 
 // now (1) change the class based component below to a functional component or change
@@ -109,11 +148,16 @@ const mapStateToProps = ( state ) => (
 
 // import in firestore and see notes below for details and later we import in
 // " convertCollectionsSnapshotToMap " function
-import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils';
 
+// -- Mark 7 -- continued
+// lecture 174: Redux Thunk
+// comment out the import below
+// import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils';
+// End of -- Mark 7 --
 
 // -- Mark 5 --
 // lecture 167: Adding Shop Data to Redux
+/*
 import { connect } from 'react-redux';
 import { updateCollections } from '../../redux/shop/shop.actions';
 // End of -- Mark 5 --
@@ -148,9 +192,16 @@ class ShopPage extends React.Component {
     // lecture 169: WithSpinner HOC 2
     // let's add a state object with the loading property set to " true " and now go to
     // -- Mark 6 -- below
+
+    // -- Mark 7 --
+    // lecture 174: Redux Thunk
+    // comment out state
+    /*
     state = {
         loading : true
     };
+    */
+    // End of -- Mark 7 --
     // End of -- Mark 6 --
 
 
@@ -159,14 +210,26 @@ class ShopPage extends React.Component {
     // and therefore we need to remember to unsubscribe when we unmount our component and Yihua
     // will definately touch on this subscriber pattern a little more in a couple lessons from
     // now so let's start off by setting unsubscribeFromSnapshot = null;
-    unsubscribeFromSnapshot = null;
+    
+    // -- Mark 7 -- continued
+    // lecture 174: Redux Thunk
+    // comment out unsubscribeFromSnapshot
+    // unsubscribeFromSnapshot = null;
+    // End of -- Mark 7 --
+
 
     // now we are going to get a snapshot representation of our " collections " array inside
     // our firestore database and we will fetch that inside our component did mount method
+    /*
     componentDidMount() {
         // now we need to pull in our firestore library from our firebase.utils.js file
         // so do this above
-        const collectionRef = firestore.collection( 'collections' );
+
+        // -- Mark 7 -- continued
+        // lecture 174: Redux Thunk
+        // comment out collectionRef
+        // const collectionRef = firestore.collection( 'collections' );
+        // End of -- Mark 7 --
 
         // now that we have the reference we want to get this " collections " data and
         // to do that we use the onSnapshot method again so we write collectionRef.onSnapshot()
@@ -259,8 +322,11 @@ class ShopPage extends React.Component {
         // this from an array to an object and remember we converted our SHOP_DATA from an array
         // to an object in our state normalization lectures or in
         // " lecture 137: Data Normalization + Collection Page " and we will convert our data
-        // from an array to an object in the next lecture        
-
+        // from an array to an object in the next lecture
+        
+        // -- Mark 7 -- continued
+        // lecture 174: Redux Thunk
+        // comment out " collectionRef.onSnapshot( async ( snapshot ) => {} "
         // collectionRef.onSnapshot( async ( snapshot ) => {
 
             // -- Mark 5 -- continued
@@ -315,7 +381,12 @@ class ShopPage extends React.Component {
             // new file called shop.types.js and shop.actions.js and let's go to the
             // shop.types.js file
 
+            // -- Mark 7 -- continued
+            // lecture 174: Redux Thunk
+            // comment out collectionsMap
             // const collectionsMap = convertCollectionsSnapshotToMap( snapshot );
+            // End of -- Mark 7 --
+
             // console.log( collectionsMap );
 
             // now I'm back from the shop.types.js file and I added our mapDispatchToProps
@@ -324,7 +395,14 @@ class ShopPage extends React.Component {
             // action creator and thereby update our reducer evertime the snapshot object
             // changes or everytime we update our firestore database or the " collections "
             // collection inside our firestore database
-            const { updateCollections } = this.props;
+
+            
+            // -- Mark 7 -- continued
+            // lecture 174: Redux Thunk
+            // comment out " const { updateCollections } = this.props; "
+            // " updateCollections( collectionsMap ); "
+            // " this.setState( { loading : false  } ); "
+            // const { updateCollections } = this.props;
             
             // updateCollections( collectionsMap );
 
@@ -335,11 +413,9 @@ class ShopPage extends React.Component {
             // this we know we got our snapshot object back from our firestore database and we've
             // updated our shop reducer by calling our action creator " updateCollections() "
             // so we can turn off our spinner
+            
             // this.setState( { loading : false  } );
-
-            fetch( 'https://firestore.googleapis.com/v1/projects/crown-clothing-25f2b/databases/(default)/documents/collections' )
-            .then( ( response ) => response.json() )
-            .then( ( collections ) => console.log( collections ) );
+            // End of -- Mark 7 --       
 
             // now that we have determined where in the logic the loading state will change we
             // have to figure out how to use our WithSpinner HOC and as we know our WithSpinner
@@ -427,8 +503,9 @@ class ShopPage extends React.Component {
             // End of -- Mark 5 --
 
         // } );
+        // End of -- Mark 7 --
 
-    }
+    /* }
 
     render() {
         
@@ -477,7 +554,12 @@ class ShopPage extends React.Component {
         // a new document object, for example, then our application will update accordingly and
         // this now mimics a real life application so we now understand how to build a front
         // end application that leverages data on the back end
-        const { loading } = this.state;
+
+        // -- Mark 7 -- continued
+        // lecture 174: Redux Thunk
+        // comment out " const { loading } = this.state; "
+        // const { loading } = this.state;
+        // End of -- Mark 7 --
 
 
         return (
@@ -942,6 +1024,7 @@ const mapStateToProps = createStructuredSelector(
 // add in the connect and mapStateToDispatch functions below and then set up the dispatch
 // function where we dispatch the action creator " updateCollections " with the argument of
 // " collectionsMap "
+/*
 const mapDispatchToProps = ( dispatch ) => (
     {
         updateCollections : ( collectionsMap ) => dispatch( updateCollections( collectionsMap ) )
@@ -951,3 +1034,411 @@ const mapDispatchToProps = ( dispatch ) => (
 
 export default connect( null, mapDispatchToProps )( ShopPage );
 // End of -- Mark 5 --
+
+*/
+
+
+
+
+
+// *********
+// and let's comment out all this code and start anew at the bottom of this file
+// *********
+
+
+
+/* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+// -- Mark 7 -- continued
+// lecture 174: Redux Thunk
+// remember we commented out the above code and we are starting anew
+import React from 'react';
+
+import { Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+
+// -- Mark 7 -- continued
+// lecture 174: Redux Thunk
+// ( note to self ) I had to move the 3 imports below to be above the " CollectionPage " import
+// in order to load the app and not get an error in the console and I'm not exactly sure why
+// these imports have to be loaded first but they do and now we have to import in
+// " createStructuredSelector " since we know were going to need to select certain values off
+// of our state
+// import { createStructuredSelector } from 'reselect';
+// next we need to create the selector that will pull in the isFetching property so let's go
+// to our shop.selector.js file and were back from our shop.selector.js file and now let's
+// import in " selectIsColllectionFetching "
+// import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+// and now let's chnage " import { updateCollections } from '../../redux/shop/shop.actions'; "
+// to " import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions'; "
+import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+// End of -- Mark 7 --
+
+
+// -- Mark 8 --
+// lecture 176: Debugging Our Code
+// import in our new selector and add it to mapStateToProps below
+// import { selectIsCollectionsLoaded } from '../../redux/shop/shop.selectors';
+// End of -- Mark 8 --
+
+
+
+// -- Mark 9 --
+// lectures 177: Container Pattern
+// comment out the following:
+// " const CollectionsOverviewWithSpinner = WithSpinner( CollectionsOverview ); "
+
+// change this:
+// " import CollectionsOverview from
+// '../../components/collections-overview/collections-overview.component'; "
+// to this:
+// " import CollectionsOverviewContainer from
+// '../../components/collections-overview/collections-overview.container'; "
+// now go to -- Mark 9 -- continued 1
+
+// End of -- Mark 9 --
+
+
+// -- Mark 9 -- continued 2
+// lectures 177: Container Pattern
+// comment out the following:
+// " const CollectionPageWithSpinner = WithSpinner( CollectionPage ); "
+// change this:
+// " import CollectionPage from '../collection/collection.component'; "
+// to this:
+// " import CollectionPageContainer from '../collection/collection.ccontainer'; "
+
+// comment out the following:
+// " import { createStructuredSelector } from 'reselect'; "
+// " import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors'; "
+// " import { selectIsCollectionsLoaded } from '../../redux/shop/shop.selectors'; "
+// " import WithSpinner from '../../components/with-spinner/with-spinner.component'; "
+
+// change this:
+// " export default connect( mapStateToProps, mapDispatchToProps )( ShopPage ); "
+// to this:
+// " export default connect( null, mapDispatchToProps )( ShopPage ); "
+// now go to -- Mark 9 -- continued 3
+
+// End of -- Mark 9 --
+
+
+
+import CollectionPageContainer from '../collection/collection.container';
+import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
+// import WithSpinner from '../../components/with-spinner/with-spinner.component';
+
+// const CollectionsOverviewWithSpinner = WithSpinner( CollectionsOverview );
+// const CollectionPageWithSpinner = WithSpinner( CollectionPage );
+
+
+class ShopPage extends React.Component {
+
+    componentDidMount() {
+
+        // -- Mark 7 -- continued
+        // lecture 174: Redux Thunk
+        // call "  fetchCollectionsStartAsync " in componentDidMount() but remember we need to
+        // destructure it off of our props first
+        const { fetchCollectionsStartAsync } = this.props;
+        // and then we will call " fetchCollectionsStartAsync() " the moment the component mounts
+        fetchCollectionsStartAsync();
+        // End of -- Mark 7 --
+
+    }
+
+    render() {
+
+        // -- Mark 7 -- continued
+        // lecture 174: Redux Thunk
+        // pull " isFetchingCollections " off of this.props and pass " isFetchingCollections "
+        // to isLoading below and remember we pulled " match " off of this.props in a prior
+        // lecture
+
+        // -- Mark 8 --
+        // lecture 176: Debugging Our Code
+        // remember to destructure " isCollectionsLoaded " off of this.props and then pass
+        // " isCollectionsLoaded " to isLoading in the <CollectionPageWithSpinner /> component
+        // below and remember we want to pass the inverse of " isCollectionsLoaded " to isLoading
+        // so we will use the not operator on " isCollectionsLoaded " below
+
+        // now if we save and go to our application we see that our application is working as
+        // expected or when we refresh the collection page we see the spinner and then a few
+        // moments later we see the data or our CollectionPage component
+
+        // so in summary we just needed to make a new selector for the CollectionPage component
+        // and we had to do this based on the way our application is set up
+
+        // in the next lesson we are going to focus on moving our selectors from mapStateToProps
+        // below into their own component
+        const { match } = this.props;
+        // End of -- Mark 7 and Mark 8 --
+
+
+        // -- Mark 9 -- continued 1
+        // lectures 177: Container Pattern
+        // in the first route let's switch back to our normal pattern or let's go from
+        // " render={} " to " component={} " or " component={ CollectionsOverviewContainer } "
+        
+        // and remove:
+        // " isFetchingCollections " and " selectIsCollectionFetching " from mapStateToProps
+
+        // and remove:
+        // " isFetchingCollections " from above since we don't need any of these anymore and
+        // remember our container is handling all this information now
+
+        // and if we look at our app, we see that it behaves exactly the same
+
+        // I think I like the container pattern
+
+        // and now let's do the same thing for our CollectionPageWithSpinner component and
+        // let's start making the changes for this component in -- Mark 9 -- continued 2
+        // above
+        // End of -- Mark 9 --
+
+
+        // -- Mark 9 -- continued 3
+        // lectures 177: Container Pattern
+        // in the second route let's switch back to our normal pattern or let's go from
+        // " render={} " to " component={} " or " component={ CollectionPageContainer } "
+
+        // and remove:
+        // " isCollectionsLoaded " and " selectIsCollectionsLoaded " from mapStateToProps
+
+        // and remove:
+        // " isCollectionsLoaded " from above since we don't need any of these anymore and
+        // remember our container is handling all this information now
+
+        // since we removed all the properties and selectors in mapStateToProps, let's comment
+        // out mapStateToProps below
+
+        // and if we look at our app, we see that it behaves exactly the same
+        // End of -- Mark 9 --
+
+        return (
+
+            <div className="shop-page">
+
+                <Route
+                    path={ `${ match.path }` }
+                    exact={ true }
+                    component={ CollectionsOverviewContainer }
+                />
+                <Route
+                    path={ `${ match.path }/:collectionId` }
+                    component={ CollectionPageContainer }
+                />
+    
+            </div>
+
+        );
+
+    }
+    
+}
+
+
+// -- Mark 7 -- continued
+// lecture 174: Redux Thunk
+
+// -- Mark 8 --
+// lecture 176: Debugging Our Code
+/*
+const mapStateToProps = createStructuredSelector(
+    {
+        isCollectionsLoaded   : selectIsCollectionsLoaded
+    }
+);
+*/
+
+
+
+/* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+// include " fetchCollectionsStartAsync " in mapDispatchToProps
+const mapDispatchToProps = ( dispatch ) => (
+    {
+        fetchCollectionsStartAsync : () => dispatch( fetchCollectionsStartAsync() )
+    }
+);
+// End of -- Mark 7 --
+
+
+// -- Mark 7 -- continued
+// lecture 174: Redux Thunk
+// let's add mapStateToProps below
+export default connect( null, mapDispatchToProps )( ShopPage );
+
+// now if we save our files and go back to our application we see the code works the exact same
+// way as before and the only difference now is that we see these new actions in redux logger
+// ( FETCH_COLLECTIONS_START, FETCH_COLLECTIONS_SUCCESS and FETCH_COLLECTIONS_FAILURE ) and
+// remember these actions are fired once our component mounts
+
+// the pattern above is a very very common pattern in redux, especially for asynchronous event
+// handling and when it comes to components that depend on external APIs to provide the
+// component with the data it needs
+
+// Yihua said we will go through this pattern again and again in this course and remember
+// practice makes perfect and redux thunk allows us to have a function
+// ( i.e. fetchCollectionsStartAsync(); ) that returns another function and this returned
+// function allows us to dispatch multiple actions which in turn allows us to handle
+// asynchronous activity inside of an action ( i.e. fetchCollectionsStartAsync(); ) instead
+// of handling asynchronous activity inside of a component like we were doing before
+
+// so if we have multiple components that need this shop data they can just fire the action
+// ( i.e. fetchCollectionsStartAsync(); ) and this makes things easier for us and Yihua thanked
+// us for watching the entire video because thunks is a very important topic and this pattern
+// is incredibly common and this start, success and failure pattern is everywhere in the react
+// redux web development world
+
+// in the next lesson we are going to tackle a new pattern using HOCs
+
+// End of -- Mark 7 --
+
+
+
+*/ // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+
+
+
+
+// lecture 201: useEffect In Our App
+// remember we commented out the above code and we are starting anew
+
+// (1) import in useEffect and we will replace " componentDidMount() {} " below with our
+// useEffect hook
+import React, { useEffect } from 'react';
+
+import { Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+
+import CollectionPageContainer from '../collection/collection.container';
+import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
+
+// (2) change this " class ShopPage extends React.Component { " to this
+// " const ShopPage = ( { fetchCollectionsStartAsync, match } ) => { "
+const ShopPage = ( { fetchCollectionsStartAsync, match } ) => {
+
+    // (3) replace this:
+    /*
+    componentDidMount() {
+
+        const { fetchCollectionsStartAsync } = this.props;
+
+        fetchCollectionsStartAsync();
+
+    }
+    */
+
+    // with this:
+    useEffect( () => {
+
+        fetchCollectionsStartAsync();
+
+        // remember one of the big caveats with the useEffect hook is how it fires and when we
+        // want it to fire bacause if were not careful the useEffect hook might cause some
+        // side effects that we don't want
+
+        // let's talk about renders cycles in our componnet and we know that our shop page will
+        // only re render if (1) our props change or (2) we call this.setState(); or use the
+        // useState hook inside our component and an example of this from a prior lecture
+        // is when we used " setCredentails " in the SignIn component or:
+        /*
+        setCredentials(
+            {
+                ...userCredentials,
+                [ name ] : value 
+            } 
+        );
+        */
+
+        // so we updated the " userCredentials " and this would trigger a component re render
+        // or (3) the parent of this component or our ShopPage component ( i.e. the parent of this
+        // component is our App.js file ) calls its own re render then this component will re
+        // render as well and the only time that will happen is if currentUser updates in the
+        // App component so what could happen here assuming we do not pass in an array below
+        // is that if were on our shop page then we know when the component mounts it will fire
+        // off the " fetchCollectionsStartAsync(); " function and after our ShopPage component
+        // mounts our App.js file will see that our auth state has changed or is now equal to null
+        // and therefore the App component will connect to the firestore database and get the
+        // current user information and the current user information update will cause the
+        // App component to re render or the setCurrentUser action creator inside
+        // componentDidMount() will update the currentUser state in the user reducer which will
+        // cause the App component to re render and this will trigger a re render in our ShopPage
+        // component or will cause our useEffect hook to run again which will cause
+        // " fetchCollectionsStartAsync(); " to fire again and remember the ShopPage component
+        // is a route in the App component return(); call and that is why a re render in the
+        // App component causes a re render in the ShopPage component
+        // and therefore " fetchCollectionsStartAsync(); " will fire twice and if we go
+        // to our shop page and refresh the browser we will see that we call
+        // " fetchCollectionsStartAsync(); " twice or we will see that we called
+        // " action FETCH_COLLECTIONS_START @ 13:47:59.347 " twice and we called
+        // " action FETCH_COLLECTIONS_SUCCESS @ 13:50:01.771 " twice
+
+        // remember that the useEffect hook will fire whenever re render is called
+
+        // the way to solve the double firing of " fetchCollectionsStartAsync(); " is to add
+        // " fetchCollectionsStartAsync " to the array below so that useEffect will only
+        // fire when " fetchCollectionsStartAsync " changes and remember
+        // " fetchCollectionsStartAsync " will only change when the ShopPage component
+        // mounts so in this case " fetchCollectionsStartAsync(); " will only fire one time
+
+        // typically we could pass in an empty array and that would accomplish the same thing
+        // but we will get a warning in the console ( i.e. " React Hook useEffect has a missing
+        // dependency: 'fetchCollectionsStartAsync'. " ) so to avoid this warning we pass in
+        // " fetchCollectionsStartAsync "
+
+        // now when I check the shop page or " localhost:3000/shop/hats " we see that
+        // " action FETCH_COLLECTIONS_START @ 13:47:59.347 " and 
+        // " action FETCH_COLLECTIONS_SUCCESS @ 13:50:01.771 " are called only one time and
+        // there is no warning
+
+        // Yihua said in our case we want to use the useEffect hook like componentDidMount
+        // and Yihua said all in all it was pretty easy to switch over our application to using
+        // the useState and useEffect hooks and in the next lesson we will learn how to use
+        // the useEffect hook to mimick our componentWillUnmount lifecycle method
+    }, [ fetchCollectionsStartAsync ] );
+
+    // (5) take out the render method or " render() {} " and comment out
+    // " const { match } = this.props; " since we included match above in our functional
+    // component argument
+    // const { match } = this.props;
+    return (
+
+        <div className="shop-page">
+
+            <Route
+                path={ `${ match.path }` }
+                exact={ true }
+                component={ CollectionsOverviewContainer }
+            />
+            <Route
+                path={ `${ match.path }/:collectionId` }
+                component={ CollectionPageContainer }
+            />
+
+        </div>
+
+    );
+
+}
+
+
+const mapDispatchToProps = ( dispatch ) => (
+    {
+        fetchCollectionsStartAsync : () => dispatch( fetchCollectionsStartAsync() )
+    }
+);
+
+
+export default connect( null, mapDispatchToProps )( ShopPage );
+
+

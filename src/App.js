@@ -1,4 +1,12 @@
 
+// *********
+// and let's comment out all this code and start anew at the bottom of this file
+// *********
+
+/* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
 import React from 'react';
 import './App.css';
 
@@ -108,6 +116,12 @@ const HatsPage = () => (
 // lecture 83: Google Sign In Authentication 2
 // convert " function App() { } " to " class App extends React.Component { } "
 // End of -- Mark 7 --
+
+
+
+/* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
 class App extends React.Component {
     
     // -- Mark 7 -- continued
@@ -310,6 +324,13 @@ class App extends React.Component {
 
                 // to this:
                 // and what we are going to do is call setState below and pass in an object
+
+
+
+                /* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
                 userRef.onSnapshot( ( snapShot ) => {
 
                         // so below we are creating a new object that has all the properties and
@@ -432,6 +453,14 @@ redux-logger.js:401   next state {user: {…}}
                         // " console.log( this.state ); " so that whenever the state changes
                         // we can see the changes in the console so let's open up the console and
                         // see what happens when we fill out the sign up form
+
+
+
+                        /* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+
                         console.log( this.state );
 
                         // however, before we fill out the sign up form we see the following
@@ -547,6 +576,12 @@ redux-logger.js:401   next state {user: {…}}
 
                         // End of -- Mark 11 --
 
+
+
+                        /* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
                     }
                 );
 
@@ -585,6 +620,12 @@ redux-logger.js:401   next state {user: {…}}
                 */
 
                 // End of -- Mark 12 --
+
+
+
+                /* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
 
             }
 
@@ -896,6 +937,14 @@ redux-logger.js:401   next state {user: {…}}
 
             // after lecture 91, I changed " console.log( user ); " to " console.log( userAuth ); "
             // so that I could see the userAuth object in the console
+
+
+
+            /* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+
             console.log( userAuth );
 
 
@@ -1002,6 +1051,13 @@ redux-logger.js:401   next state {user: {…}}
             // in the next video
             // End of -- Mark 15 --
 
+
+
+            /* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+
         }
         );
 
@@ -1103,6 +1159,14 @@ redux-logger.js:401   next state {user: {…}}
             // -- Mark 14 -- continued
             // lecture 121: Checkout Page
             // add the checkout route below
+
+
+
+            /* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+
             <div>
                 <Header />
                 <Switch>
@@ -1171,6 +1235,14 @@ const mapStateToProps = ( { user } ) => (
 */
 
 // to this:
+
+
+
+/* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+
 const mapStateToProps = createStructuredSelector(
     {
         currentUser : selectCurrentUser
@@ -1220,6 +1292,13 @@ this.props.setCurrentUser(
 
 // so we are still passing in our snapShot object but now we are setting the currentUser
 // value equal to the above object
+
+
+
+/* // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
 const mapDispatchToProps = ( dispatch ) => ( 
     {
         setCurrentUser : ( user ) => dispatch( setCurrentUser( user ) )
@@ -1230,3 +1309,145 @@ const mapDispatchToProps = ( dispatch ) => (
 
 export default connect( mapStateToProps, mapDispatchToProps )( App );
 // End of -- Mark 12 and 13 --
+
+
+
+*/  // COMMENT OUT LECTURE 201 TIMESTAMP
+
+
+
+
+
+
+
+
+
+
+
+
+
+// lecture 201: useEffect In Our App
+// remember we commented out the above code and we are starting anew
+
+// (1) first let's import in our useEffect hook and we will replace " componentDidMount() {} "
+// below with our useEffect hook
+import React, { useEffect } from 'react';
+import './App.css';
+
+import HomePage from './pages/homepage/homepage.component';
+import ShopPage from './pages/shop/shop.component';
+import Header from './components/header/header.component';
+import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+import CheckoutPage from './pages/checkout/checkout.component';
+
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { connect } from 'react-redux';
+import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selectors';
+import { createStructuredSelector } from 'reselect';
+
+// (2) change this " class App extends React.Component { " to this " const App = () => { "
+// and add " currentUser " and " setCurrentUser " into the argument below
+const App = ( { currentUser, setCurrentUser }  ) => {
+
+    // (3) replace " componentDidMount() { " with " useEffect( () => { " and we only want to
+    // fire the useEffect hook when ???
+    useEffect( () => {
+
+        auth.onAuthStateChanged( async ( userAuth ) => {
+
+            if ( userAuth ) {
+
+                const userRef = await createUserProfileDocument( userAuth );
+
+                userRef.onSnapshot( ( snapShot ) => {
+
+                    // (4) change " this.props.setCurrentUser( " to " setCurrentUser( "
+                    setCurrentUser(
+                        {
+                            id : snapShot.id,
+                            ...snapShot.data()
+                        }
+                    );
+
+                } );
+
+            }
+
+            else {
+
+                // (5) change " this.props.setCurrentUser( userAuth ); " to
+                // " setCurrentUser( userAuth ); "
+                setCurrentUser( userAuth );
+
+            }
+
+        } );
+
+    // (6) useEffect will fire every time setCurrentUser changes and what this means is that
+    // useEffect will fire on the same frequency as componentDidMount()
+    }, [ setCurrentUser ] );
+
+
+    // (7) take out the render method or " render() {} "
+    return (
+
+        // (8) replace " this.props.currentUser " below with " currentUser " and now let's
+        // go to our shop component and update that component with the useEffect hook
+        <div>
+            <Header />
+            <Switch>
+                <Route  
+                    path="/"
+                    exact={ true }
+                    component={ HomePage }
+                />
+                <Route  
+                    path="/shop"
+                    component={ ShopPage }
+                />
+                <Route
+                    path="/checkout"
+                    exact={ true }
+                    component={ CheckoutPage }
+                />
+                <Route  
+                    path="/signin"
+                    exact={ true }
+                    render=
+                    { 
+                        () =>
+                            currentUser ? (
+                                <Redirect to="/" />
+                            ) : (
+                                <SignInAndSignUpPage />
+                            )
+                    }
+                />
+
+            </Switch>
+        </div>
+
+    );
+
+}
+
+
+const mapStateToProps = createStructuredSelector(
+    {
+        currentUser : selectCurrentUser
+    }
+);
+
+
+const mapDispatchToProps = ( dispatch ) => ( 
+    {
+        setCurrentUser : ( user ) => dispatch( setCurrentUser( user ) )
+    } 
+);
+
+
+export default connect( mapStateToProps, mapDispatchToProps )( App );
+
+

@@ -1,4 +1,4 @@
-
+/*
 import React from 'react';
 import './sign-in.styles.scss';
 
@@ -96,7 +96,7 @@ class SignIn extends React.Component {
         // changes were uploaded sucessfully
 
         // End of -- Mark 5 --
-
+/*
     }
 
     handleChange = ( e ) => {
@@ -220,3 +220,160 @@ export default SignIn;
 
 // now go to our sign-in page or sign-in-and-sign-up.component.jsx and
 // render out our SignIn component on that page
+*/
+
+
+
+
+// *********
+// and let's comment out all this code and start anew at the bottom of this file
+// *********
+
+
+
+// -- Mark 6 --
+// lecture 200: Converting Class Components with useState
+// remember we commented out the above code and we are starting anew
+// let's switch this class based component to a functional component and replace the class based
+// state object with a use state hook and first we need to import in useState from react
+import React, { useState } from 'react';
+import './sign-in.styles.scss';
+
+import FormInput from '../form-input/form-input.component';
+import CustomButton from '../custom-button/custom-button.component';
+
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
+
+// change the class based component to a functional component so let's change
+// " class SignIn extends React.Component { " to " const SignIn = () => { " and take out
+// render() {} below
+const SignIn = () => {
+
+    // replace the state object below with a useState hook
+    const [ userCredentials, setCredentials ] = useState( { email : '', password : '' } );
+
+    /*
+    state = {
+        email    : '',
+        password : ''
+    };
+    */
+
+    // it appears that userCredentials are equal to:
+    /*
+    userCredentials = {
+        email : '',
+        password : ''
+    };
+    */
+
+    // and if we do " console.log( userCredentials ); " we get a result of
+    // { email: "", password: "" }
+
+    // and if we do " console.log( setCredentials ); " then we get an error in the console
+
+    // destructure email and password and then pass these variables to their respective form
+    // input elements below and remember we are replacing this
+    // " const { email, password } = this.props; " with this:
+    const { email, password } = userCredentials;
+
+    // add const to handleSubmit
+    const handleSubmit = async ( e ) => {
+
+        e.preventDefault();
+
+        try {
+
+            await auth.signInWithEmailAndPassword( email, password );
+
+        } catch ( error ) {
+
+            console.log( error );
+
+        }
+
+    }
+
+    // add const to handleChange
+    const handleChange = ( e ) => {
+
+        const { name, value } = e.target;
+
+        // replace " this.setState( { [ name ] : value } ); " with:
+        setCredentials(
+            {
+                ...userCredentials,
+                [ name ] : value 
+            } 
+        );
+        // and here we are updating userCredentials with a key value pair and this is similar to
+        // how we updated state in our reducers or:
+        /*
+        return {
+            ...state,
+            show : !state.show
+        };
+        */
+
+        // and remember doing this will result in an error:
+        // " setCredentials( { [ name ] : value } ); "
+
+    }
+
+    return (
+
+        // change " onSubmit={ this.handleSubmit } " to " onSubmit={ handleSubmit } " and
+        // change " value={ this.state.email } " to " value={ email } " and
+        // change " handleChange={ this.handleChange } " to " handleChange={ handleChange } " and
+        // change " value={ this.state.password } " to " value={ password } " and
+        // change " handleChange={ this.handleChange } " to " handleChange={ handleChange } "
+
+        // and I tried signing in with email and password and using Google Sign In and everything
+        // works as expected
+        <div className="sign-in">
+            <h2 className="sign-in--title">I already have an account</h2>
+            <span>Sign in with your email and password</span>
+
+            <form className="sign-in--form" onSubmit={ handleSubmit } >
+                <FormInput
+                    name="email"
+                    type="email"
+                    label="Email"
+                    value={ email }
+                    handleChange={ handleChange }
+                    required
+                />
+                <FormInput
+                    name="password"
+                    type="password"
+                    label="Password"
+                    value={ password }
+                    handleChange={ handleChange }
+                    required
+                />
+
+                <div className="sign-in--buttons">
+                    <CustomButton
+                        type="submit"
+                    >
+                        Sign in
+                    </CustomButton>
+                    <CustomButton
+                        type="button"
+                        onClick={ signInWithGoogle }
+                        isGoogleSignIn
+                    >
+                        Sign in with Google
+                    </CustomButton>
+                </div>
+            </form>
+        </div>
+
+    );
+
+}
+// End of -- Mark 6 --
+
+export default SignIn;
+
+

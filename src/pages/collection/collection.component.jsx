@@ -1,6 +1,19 @@
 
 import React from 'react';
-import './collection.styles.scss';
+
+// -- Mark 4 --
+// lecture 202: useEffect as componentWillUnmount()
+// comment out " collection.styles.scss " and import in the styled components
+// import './collection.styles.scss';
+
+import {
+    CollectionPageContainer,
+    CollectionPageTitle,
+    CollectionPageItemsContainer
+} from './collection.styles';
+// End of -- Mark 4 --
+
+
 
 // import in the CollectionItem component since this component is the component that
 // displays our collection items
@@ -81,11 +94,11 @@ const CollectionPage = ( { collection } ) => {
 
     return (
 
-        <div className="collection-page">
+        <CollectionPageContainer>
 
-            <h2 className="collection-page--title">{ title }</h2>
+            <CollectionPageTitle>{ title }</CollectionPageTitle>
 
-            <div className="collection-page--items">
+            <CollectionPageItemsContainer>
             {
                 items.map( ( item ) => (
 
@@ -96,13 +109,11 @@ const CollectionPage = ( { collection } ) => {
 
                 ) )
             }
-            </div>
+            </CollectionPageItemsContainer>
 
-        </div>
+        </CollectionPageContainer>
 
     );
-
-    console.log( collection );
 
 }
 // End of -- Mark 2 --
@@ -160,5 +171,5 @@ const mapStateToProps = ( state, ownProps ) => (
 );
 
 
-export default connect( mapStateToProps )( CollectionPage);
+export default connect( mapStateToProps )( CollectionPage );
 // End of -- Mark 1 --

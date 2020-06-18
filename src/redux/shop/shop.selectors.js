@@ -5,7 +5,7 @@ import { createSelector } from 'reselect';
 // the below gives us the shop reducer
 const selectShop = ( state ) => state.shop;
 
-// the below gives us the shop collections array
+// the below gives us the shop collections object
 export const selectShopCollections = createSelector( 
     [ selectShop ],
     ( shop ) => shop.collections
@@ -41,7 +41,9 @@ const COLLECTION_ID_MAP = {
 // now that we have our selecttor, let's bring this into our component so let's go to the
 // pages/collection/collection.component.jsx file
 
-// the below gives us the correct collection object
+
+// the below gives us the correct collection object, which results in rendering the correct
+// collection page ( i.e. the hats page or the jackets page, etc., etc. )
 
 
 // -- Mark 4 --
@@ -173,8 +175,65 @@ console.log(keys) // ['alpha', 'beta']
 export const selectCollectionForPreview = createSelector(
     [ selectShopCollections ],
     ( collections ) => collections ? Object.keys( collections ).map( ( key ) => collections[ key ] ) : []
-    
 );
 // End of -- Mark 4 --
 
 // End of -- Mark 3 --
+
+
+
+// -- Mark 5 --
+// lecture 174: Redux Thunk
+// the below gives us the shop reducer's isFetching boolean value and we can use this selector
+// in the shop component to tell us whether or not isFetching is true or false and let's go
+// back to the shop.component.jsx file
+export const selectIsCollectionFetching = createSelector(
+    [ selectShop ],
+    ( shop ) => shop.isFetching
+);
+// End of -- Mark 5 --
+
+
+
+
+// -- Mark 6 --
+// lecture 176: Debugging Our Code
+// in order to prevent the error: " Cannot destructure property 'title' of 'collection' as it
+// is null. " when we refresh the collection page or the collection.component.jsx file we will
+// change the selector we use for the " isFetchingCollections " property in mapStateToProps()
+// in the shop page component from " selectIsCollectionFetching " to " selectIsCollectionsLoaded "
+
+// and " selectIsCollectionsLoaded " will return a boolean value that will tell us whether or not
+// our " collections " collection is null or not null and remember by default " collections " is
+// set equal to null inside INITIAL_STATE or:
+/*
+const INTIAL_STATE = {
+
+    collections  : null,
+    isFetching   : false,
+    errorMessage : undefined
+
+};
+*/
+
+// and Yihua is going to show us a shorthand way to convert a value or " shop.collections " to
+// a truthy or falsey boolean value
+// and the way we do this is by using a double bang or " !! " and a comment on stackoverflow
+// described " !! " as follows: " Converts Object to boolean. If it was falsey ( e.g. 0, null,
+// undefined, etc. ), it will be false, otherwise, true. " so " !!0 " evaluates to " false "
+// and " !!'' " evaluates to " false " and " !!null " evaluates to " false " and " !!{} " evaluates
+// to " true " and using double bang on any object will evaluate to " true " so if our
+// " collections " collection is loaded ( meaning we have an object ) we will get a truthy value
+// otherwise we will get a falsey value
+
+// so let's change " shop.collections " below to " !!shop.collections "
+
+// the below gives us a true or false value depending on the result of " !!shop.collections "
+export const selectIsCollectionsLoaded = createSelector(
+    [ selectShop ],
+    ( shop ) => !!shop.collections
+);
+
+// now let's pull this selector into our shop page component so let's go to our shop.component.jsx
+// file
+// End of -- Mark 6 --

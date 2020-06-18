@@ -35,7 +35,6 @@ export const CollectionItemContainer = styled.div`
 
 
 export const CollectionItemImage = styled.div`
-
     // w3schools said: " How To Create Responsive Images? If you want the image to scale
     // both up and down on responsiveness, set the CSS width property to 100% and height
     // to auto ( i.e. { width : 100%; height : auto; } ) " and " If you want an image to

@@ -36,6 +36,18 @@ import rootReducer from './root-reducer';
 // going to be an array and we do that by typing the following:
 
 
+// -- Mark 3 --
+// lecture 174: Redux Thunk
+// import in thunk
+import thunk from 'redux-thunk';
+// now let's put it in the middlewares array so change " const middlewares = []; " to
+// " const middlewares = [ thunk ]; " and this is all we need as far as set up goes and to
+// actually start using redux thunk we need to reconfigure our shop reducer and write some
+// new shop action creators and the first thing we will need to do is modify shop.types.js
+// so let's go to our shop,types.js file
+// End of -- Mark 3 --
+
+
 // -- Mark 2 --
 // lecture 150: Optimizing Production Build
 // the first thing we need to do to make sure logger only applies when were in development is
@@ -47,7 +59,7 @@ if ( process.env.NODE_ENV === 'development' ) {
 }
 */
 
-const middlewares = [];
+const middlewares = [ thunk ];
 
 // inside of node there is an environment variable and we can set environment variables
 // or heroku can set environment variables but create react app actually sets an environment
